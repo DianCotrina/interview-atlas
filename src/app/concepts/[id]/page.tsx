@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { loadConcepts } from "../../../lib/content";
 import { ConceptMarkdown } from "../../../components/ConceptMarkdown";
+import { QuestionPractice } from "../../../components/QuestionPractice";
 
 export function generateStaticParams() {
   return loadConcepts().map((concept) => ({ id: concept.id }));
@@ -56,6 +57,10 @@ export default async function ConceptPage({
         <summary>Explicación completa</summary>
         <ConceptMarkdown body={concept.body} />
       </details>
+      <QuestionPractice
+        conceptId={concept.id}
+        questions={concept.drillQuestions}
+      />
       {related.length > 0 && (
         <section className="related">
           <h2>Conecta esta idea</h2>
