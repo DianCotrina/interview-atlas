@@ -9,3 +9,4 @@ coverage/
 api/bin/
 api/.data/
 .sites-runtime/
+*.tsbuildinfo
