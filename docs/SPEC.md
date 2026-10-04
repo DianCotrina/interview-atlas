@@ -1,6 +1,6 @@
 # Interview Atlas — Product Spec
 
-**Owner:** Diego · **Status:** Phase 1 ready to start · **Last updated:** see git history
+**Owner:** Diego · **Status:** First study slice implemented; Phase 1 in progress · **Last updated:** see git history
 
 ## Problem
 
@@ -49,19 +49,21 @@ it at spaced intervals, and (3) build and explain real system design decisions.
 
 Concept pages are built from Markdown and exported as a static Next.js site. A Go API
 stores study progress from this phase. An API outage must not prevent reading concepts.
-Diego selected PostgreSQL and review-attempt history. The written first-slice design
-and ADRs remain proposed until he reviews the schema and retry behavior.
+Diego selected PostgreSQL and review-attempt history and approved the first-slice
+design, including its schema and retry behavior. ADR drafts still need his own
+interview defense. The implemented slice loads six concepts and records eleven
+supplied question assessments; the remaining Phase 1 tasks below stay open.
 Start with one useful slice; the original frontend-only weekend estimate no longer
 covers the expanded scope.
 
 ### P0
 
-- [ ] `[AGENT]` Scaffold Next.js + TypeScript, strict TS, ESLint, Vitest, and a Go API
+- [x] `[AGENT]` Scaffold Next.js + TypeScript, strict TS, ESLint, Vitest, and a Go API
       with Go tests. Folder layout: `content/` (Markdown), `src/app/`,
       `src/components/visualizers/`, and `api/`.
 - [ ] `[DIEGO]` Choose the first progress API's storage and resource semantics;
       review ADR-009 (boundaries), ADR-010 (PostgreSQL), and ADR-011 (history).
-- [ ] `[AGENT]` Implement the progress API and storage chosen by Diego. Keep this
+- [x] `[AGENT]` Implement the progress API and storage chosen by Diego. Keep this
       slice limited to API and infrastructure work; do not implement his scheduler
       or the later Domain/Application learning exercises.
 - [ ] `[AGENT]` Markdown content pipeline: load `content/**/*.md` with frontmatter
@@ -72,9 +74,9 @@ covers the expanded scope.
 - [ ] `[AGENT]` Load all content from `docs/CONTENT_SEED.md` into `content/` pages,
       one concept per page. Keep `[COMPLETAR: ...]` placeholders visible and visually
       highlighted (e.g. amber badge "needs your real number").
-- [ ] `[AGENT]` Concept page layout: summary first, then detail, then "Say it in the
-      interview" (English) box, then related pages.
-- [ ] `[AGENT]` Add an AI code-review study page and checklist. Propose new study
+- [x] `[AGENT]` Concept page layout: summary and "Say it in the interview" (English)
+      box first, then expandable detail and related pages (approved first-slice layout).
+- [x] `[AGENT]` Add an AI code-review study page and checklist. Propose new study
       wording for Diego to review; do not silently rewrite existing seed content.
 - [ ] `[AGENT]` Visualizers (port and improve from Diego's two existing HTML pages):
       (a) List vs HashSet vs Dictionary lookup-cost race, (b) two pointers from both
