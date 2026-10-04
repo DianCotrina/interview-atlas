@@ -11,6 +11,19 @@ const input: AttemptInput = {
 const attempt = { ...input, createdAt: "2026-10-04T12:00:00Z" };
 
 describe("assessment session", () => {
+  it("does not retry a permanent attempt conflict", () => {
+    const saving = assessmentReducer(
+      { status: "idle" },
+      { type: "start", input },
+    );
+    const failed = assessmentReducer(saving, {
+      type: "fail",
+      message: "Conflict",
+      retryable: false,
+    });
+    expect(assessmentReducer(failed, { type: "retry" })).toEqual(failed);
+    expect(assessmentReducer(failed, { type: "start", input })).toEqual(failed);
+  });
   it("retains the same ID and grade after an uncertain write", () => {
     const saving = assessmentReducer(
       { status: "idle" },

@@ -26,6 +26,13 @@ afterEach(() =>
 );
 
 describe("content validation", () => {
+  it("keeps supplied drills in metadata without exposing duplicate answers in the body", () => {
+    const concepts = loadConcepts();
+    expect(concepts.flatMap((c) => c.drillQuestions)).toHaveLength(11);
+    for (const concept of concepts) {
+      expect(concept.body, concept.id).not.toMatch(/^drill:\s*$/m);
+    }
+  });
   it("loads a valid page without changing its body", () => {
     expect(parseConcept(valid, "sample.md")).toMatchObject({
       id: "sample",

@@ -35,11 +35,12 @@ function Question({
       dispatch({ type: "saved", attempt });
       onSaved();
     } catch (error) {
-      const message =
-        error instanceof ProgressAPIError && error.status === 409
-          ? "Este intento tiene un conflicto. El servidor no confirmó tu valoración."
-          : "No se pudo confirmar el guardado. Mantén esta página abierta para reintentar el mismo repaso.";
-      dispatch({ type: "fail", message });
+      const conflict =
+        error instanceof ProgressAPIError && error.status === 409;
+      const message = conflict
+        ? "Este intento tiene un conflicto. Vuelve a cargar la página y consulta tu historial antes de registrar otro repaso."
+        : "No se pudo confirmar el guardado. Mantén esta página abierta para reintentar el mismo repaso.";
+      dispatch({ type: "fail", message, retryable: !conflict });
     } finally {
       inFlight.current = false;
     }
@@ -59,7 +60,8 @@ function Question({
   }
 
   function retry() {
-    if (state.status !== "failed" || inFlight.current) return;
+    if (state.status !== "failed" || !state.retryable || inFlight.current)
+      return;
     inFlight.current = true;
     dispatch({ type: "retry" });
     void send(state.input);
@@ -107,9 +109,11 @@ function Question({
         {state.status === "failed" && (
           <div className="save-error">
             <p>{state.message}</p>
-            <button className="secondary-button" onClick={retry}>
-              Reintentar guardado
-            </button>
+            {state.retryable && (
+              <button className="secondary-button" onClick={retry}>
+                Reintentar guardado
+              </button>
+            )}
           </div>
         )}
         {state.status === "saved" && (
@@ -149,7 +153,9 @@ export function QuestionPractice({
           <p className="eyebrow">De recordar a explicar</p>
           <h2 id="practice-heading">Práctica en voz alta</h2>
         </div>
-        <span>{questions.length} preguntas</span>
+        <span>
+          {questions.length} {questions.length === 1 ? "pregunta" : "preguntas"}
+        </span>
       </div>
       <p className="practice-intro">
         Responde primero. Después revela la respuesta y registra cómo te fue.

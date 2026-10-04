@@ -36,8 +36,3 @@ diccionario que crece con la entrada → O(n) o O(k) espacio.
 
 **Say it in the interview:** "This is O(n) time because it's a single pass, and O(k)
 space for the dictionary, where k is the number of distinct keys."
-
-drill:
-- ¿Cuál es la regla de bucles anidados vs secuenciales? → Anidado multiplica (n²), secuencial suma (n).
-- Simplifica O(n + k) donde k ≤ n. → O(n).
-- ¿Qué dos complejidades debes decir siempre? → Tiempo y espacio.

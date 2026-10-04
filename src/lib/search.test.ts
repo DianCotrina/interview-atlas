@@ -1,5 +1,15 @@
 import { expect, it } from "vitest";
 import { filterConcepts } from "./search";
+import { loadConcepts } from "./content";
+it("finds the advertised examples in the real study catalog", () => {
+  const actual = loadConcepts();
+  expect(filterConcepts(actual, "complejidad").map((c) => c.id)).toContain(
+    "big-o",
+  );
+  expect(filterConcepts(actual, "hashmap").map((c) => c.id)).toContain(
+    "choosing-collections",
+  );
+});
 const concepts = [
   {
     id: "one",

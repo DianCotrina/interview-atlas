@@ -3,11 +3,16 @@ import type { Attempt, AttemptInput } from "./progress-api";
 export type AssessmentState =
   | { status: "idle" }
   | { status: "saving"; input: AttemptInput }
-  | { status: "failed"; input: AttemptInput; message: string }
+  | {
+      status: "failed";
+      input: AttemptInput;
+      message: string;
+      retryable: boolean;
+    }
   | { status: "saved"; attempt: Attempt };
 export type AssessmentAction =
   | { type: "start"; input: AttemptInput }
-  | { type: "fail"; message: string }
+  | { type: "fail"; message: string; retryable?: boolean }
   | { type: "retry" }
   | { type: "saved"; attempt: Attempt }
   | { type: "reset" };
@@ -23,10 +28,15 @@ export function assessmentReducer(
         : state;
     case "fail":
       return state.status === "saving"
-        ? { status: "failed", input: state.input, message: action.message }
+        ? {
+            status: "failed",
+            input: state.input,
+            message: action.message,
+            retryable: action.retryable ?? true,
+          }
         : state;
     case "retry":
-      return state.status === "failed"
+      return state.status === "failed" && state.retryable
         ? { status: "saving", input: state.input }
         : state;
     case "saved": {

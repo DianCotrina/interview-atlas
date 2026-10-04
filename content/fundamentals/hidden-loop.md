@@ -24,7 +24,3 @@ Ejemplo real (drill de anagramas): `foreach (char c in a) if (!b.Contains(c)) ..
 
 **Say it in the interview:** "Calling Contains on a list inside a loop hides a second
 loop — it's O(n²). Switching to a HashSet or Dictionary makes each lookup O(1)."
-
-drill:
-- ¿Qué complejidad tiene `list.Contains(x)` dentro de un `foreach` sobre n elementos? → O(n²): Contains es O(n) y está anidado.
-- ¿Un string se comporta como List o como HashSet para buscar? → Como List: O(n).

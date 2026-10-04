@@ -42,8 +42,3 @@ No se usa; `Dictionary<K,V>` la reemplazó.
 **Say it in the interview:** "I pick the structure by the question I ask inside the loop:
 HashSet for 'have I seen this', Dictionary when I need a value attached to the key,
 and never a List for lookups inside a loop."
-
-drill:
-- ¿Qué pregunta decide entre HashSet y Dictionary? → ¿Solo necesito saber si existe (HashSet) o guardar un dato junto a la clave (Dictionary)?
-- Necesitas guardar el historial de acciones por clínico, con repetidos. ¿Tipo? → `Dictionary<string, List<string>>`.
-- ¿Por qué no usar Hashtable? → Es legacy no genérica; Dictionary<K,V> es tipada y la reemplaza.

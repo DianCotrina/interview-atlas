@@ -30,7 +30,3 @@ del mock), y describir la solución buena en la frase 3.
 
 **Say it in the interview:** "Let me restate the problem... One clarifying question...
 The brute force would be ___, which is O(n²). A better approach is ___."
-
-drill:
-- Dime el guion de la frase 3 para problemas de contar. → Sacar los valores distintos y recorrer todos los datos una vez por cada uno → O(n²).
-- ¿Qué tipo de pregunta va en la frase 2? → Sobre las reglas del problema, no sobre la solución.

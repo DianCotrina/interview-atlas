@@ -1,6 +1,6 @@
 # ADR-011: Preserve review-attempt history
 
-- **Status:** proposed (Diego selected history; schema and written review are outstanding)
+- **Status:** proposed (Diego approved history, schema, and retry behavior; his written interview defense is outstanding)
 - **Date:** 2026-10-04
 - **Decider:** Diego
 

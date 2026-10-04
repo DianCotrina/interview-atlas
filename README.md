@@ -82,6 +82,8 @@ an unconfirmed save; reading and answer reveal keep working. Keep the page open 
 retry that same attempt: pending requests are held in memory, with no durable
 offline queue or automatic resends. Reloading discards a pending retry identity;
 check the saved history before grading again after an uncertain outcome.
+An ID conflict is permanent for that payload, so it offers no futile retry: reload
+and inspect history before starting a new review.
 
 The API validates bounded JSON, canonical UUIDs, slug IDs (up to 128 characters),
 and grades; SQL is parameterized. It uses finite timeouts, exact local CORS origins,
@@ -133,6 +135,14 @@ Stable IDs in frontmatter link material to history. Editing question wording kee
 the same identity; a different learning question needs a new ID. Build validation
 rejects missing metadata and duplicate identities. Never invent experience metrics
 or replace `[COMPLETAR: ...]`; preserve the original study wording.
+
+## AI-assisted workflow
+
+Diego chose the architecture and approved the design. Codex implemented the slice;
+a read-only Claude session reviewed it. Its exposed-answer finding led to a
+regression test and a structural correction that preserves the study wording.
+[Review and verified resolutions](docs/reviews/2026-10-04-claude-first-slice.md)
+record the evidence, trade-offs, and deferred summary refinement.
 
 ## What changed and why
 
