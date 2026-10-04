@@ -25,8 +25,9 @@ modes and observability.
 
 | Phase | Decision | Concepts you'll be able to explain |
 |---|---|---|
-| 1 | Content as files, progress in localStorage | Static vs dynamic, client state, why "no backend" is a valid choice |
-| 2 | ADR-001 Move progress server-side | Source of truth, sync, offline-first trade-offs |
+| 1 | ADR-009 Static Next.js content + Go progress API | Static vs dynamic, service boundaries, API failure behavior, full-stack learning trade-offs |
+| 1 | ADR-010 PostgreSQL, ADR-011 Attempt history | Transactions, stable identity, retry deduplication, history vs mutable state |
+| 2 | ADR-001 Extend server-side progress for drills | Source of truth, sync, offline-first trade-offs |
 | 2 | ADR-002 Database + Clean Architecture | Dependency inversion, repository pattern, testability, swapping infrastructure |
 | 2 | ADR-003 API shape | REST resources, status codes, idempotency keys, ProblemDetails, versioning |
 | 3 | ADR-004 Lambda vs container | Serverless trade-offs, cold starts, scaling to zero, cost model |

@@ -65,12 +65,16 @@ the choice silently, the project hurts him instead of helping. Therefore:
 - If a technical fact is uncertain (library version, AWS limit, pricing), say so and
   link the official docs instead of guessing.
 
-## Stack (Phase 1 is fixed; later phases are decided by Diego via ADRs)
+## Stack (Diego's current choice; further decisions require ADRs)
 
-- Phase 1 frontend: React + TypeScript + Vite. Content as Markdown files with
-  frontmatter under `content/`. No backend. Progress stored in `localStorage`.
-- Phase 2+: see `docs/SPEC.md` — backend, storage, auth, and AWS topology are
-  **open decisions** for Diego. Propose options; don't preempt.
+- Phase 1 frontend: Next.js + React + TypeScript, with statically exported concept
+  pages. Content remains Markdown with frontmatter under `content/`.
+- Go owns the study-progress API from Phase 1. Concept pages remain readable when
+  that API is unavailable. Diego chooses storage and API semantics before implementation.
+- The implementation stack is for learning Go and Next.js; .NET interview content and
+  the C# sample correctness requirements remain in scope.
+- Phase 2+: see `docs/SPEC.md` — drill-domain architecture, auth, AWS topology, and
+  any storage changes remain decisions for Diego. Propose options; don't preempt.
 
 ## Conventions
 
@@ -96,4 +100,5 @@ add: Diego has stated the time/space complexity himself.
 - Don't add dependencies without saying what they're for and what the alternative was.
 - Don't silently "improve" content wording in `content/` — that's Diego's study material.
   Propose edits; let him accept.
-- Don't over-engineer Phase 1. It should be usable within a weekend.
+- Keep Phase 1 small. The full-stack choice adds integration work; build one usable
+  study slice before expanding it.

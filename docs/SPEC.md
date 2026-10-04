@@ -23,6 +23,9 @@ it at spaced intervals, and (3) build and explain real system design decisions.
 4. **Close real gaps:** by Phase 3, Diego has deployed and operated Lambda, API Gateway,
    and DynamoDB himself — gaps flagged in his job applications.
 5. **Portfolio-ready:** public repo with a clear README, ADRs, and a live URL.
+6. **Practice a new stack:** implement the app with Next.js, TypeScript, and Go while
+   retaining the .NET interview material. AI code review starts as study pages and a
+   checklist, rather than an external AI integration.
 
 ## Non-goals
 
@@ -42,24 +45,37 @@ it at spaced intervals, and (3) build and explain real system design decisions.
 
 ---
 
-## Phase 1 — Static study site (target: one or two weekends)
+## Phase 1 — Study site (Next.js + Go)
 
-No backend. Everything ships as a static site.
+Concept pages are built from Markdown and exported as a static Next.js site. A Go API
+stores study progress from this phase. An API outage must not prevent reading concepts.
+Diego selected PostgreSQL and review-attempt history. The written first-slice design
+and ADRs remain proposed until he reviews the schema and retry behavior.
+Start with one useful slice; the original frontend-only weekend estimate no longer
+covers the expanded scope.
 
 ### P0
 
-- [ ] `[AGENT]` Scaffold React + TypeScript + Vite, strict TS, ESLint, Vitest. Folder
-      layout: `content/` (Markdown), `src/components/visualizers/`, `src/pages/`.
+- [ ] `[AGENT]` Scaffold Next.js + TypeScript, strict TS, ESLint, Vitest, and a Go API
+      with Go tests. Folder layout: `content/` (Markdown), `src/app/`,
+      `src/components/visualizers/`, and `api/`.
+- [ ] `[DIEGO]` Choose the first progress API's storage and resource semantics;
+      review ADR-009 (boundaries), ADR-010 (PostgreSQL), and ADR-011 (history).
+- [ ] `[AGENT]` Implement the progress API and storage chosen by Diego. Keep this
+      slice limited to API and infrastructure work; do not implement his scheduler
+      or the later Domain/Application learning exercises.
 - [ ] `[AGENT]` Markdown content pipeline: load `content/**/*.md` with frontmatter
       (`title`, `section`, `tags`, `drillQuestions`, `status: learned|in-progress|pending`).
-      Render with syntax highlighting for C#.
+      Load at build time and render with syntax highlighting for C#.
 - [ ] `[AGENT]` Navigation by section: Fundamentals · Patterns · .NET & APIs ·
-      System Design · Behavioral · Job Search. Search box over titles and tags.
+      System Design · Behavioral · Job Search · AI Engineering. Search box over titles and tags.
 - [ ] `[AGENT]` Load all content from `docs/CONTENT_SEED.md` into `content/` pages,
       one concept per page. Keep `[COMPLETAR: ...]` placeholders visible and visually
       highlighted (e.g. amber badge "needs your real number").
 - [ ] `[AGENT]` Concept page layout: summary first, then detail, then "Say it in the
       interview" (English) box, then related pages.
+- [ ] `[AGENT]` Add an AI code-review study page and checklist. Propose new study
+      wording for Diego to review; do not silently rewrite existing seed content.
 - [ ] `[AGENT]` Visualizers (port and improve from Diego's two existing HTML pages):
       (a) List vs HashSet vs Dictionary lookup-cost race, (b) two pointers from both
       ends — two-sum and palindrome, (c) slow/fast pointers — remove duplicates.
@@ -72,9 +88,11 @@ No backend. Everything ships as a static site.
       and writes tests with him. This is also an interview talking point.
 - [ ] `[AGENT]` Drill mode UI on top of Diego's scheduler: shows due questions one at a
       time, answer hidden until "show answer", then three self-grade buttons. Progress in
-      `localStorage`. Shows "weakest concepts" list.
-- [ ] `[AGENT]` Deploy as a static site to any free host (temporary — Phase 3 moves it
-      to AWS). README with live URL.
+      the Go API. Diego chooses outage and retry behavior before this integration.
+      Shows "weakest concepts" list.
+- [ ] `[AGENT]` Publish the static frontend and the Go API after Diego chooses hosting
+      and access control. README with live URL. Do not publish a private-progress API
+      before its authentication decision.
 
 **Acceptance criteria (Phase 1)**
 - Given a concept page, when Diego opens it, the summary and English interview line are
@@ -83,6 +101,7 @@ No backend. Everything ships as a static site.
   reappears the next day.
 - Every C# snippet on the site compiles and passes its test in CI.
 - No `[COMPLETAR]` placeholder has been replaced by invented data.
+- Concept pages remain readable when the progress API is unavailable.
 
 ### P1
 - [ ] `[AGENT]` Dark mode. Print-friendly "night before" cheat sheet page.
@@ -93,32 +112,33 @@ No backend. Everything ships as a static site.
 
 ---
 
-## Phase 2 — Backend API (.NET 8, Clean Architecture)
+## Phase 2 — Go backend architecture and drill progress
 
-Goal: move drill progress server-side, and practice the architecture Diego already
-used at work, but this time documented end to end.
+Goal: extend the Phase 1 Go progress API for spaced repetition and practice the
+architecture Diego already used at work, adapted to Go and documented end to end.
 
 Open decisions for Diego (each becomes an ADR — see `docs/SYSTEM_DESIGN_TRACK.md`):
-- **ADR-001** Where does drill progress live, and why move it off `localStorage` at all?
-- **ADR-002** Local database for development (SQLite, SQL Server, Postgres) — and how
-  the Domain layer stays independent of it.
+- **ADR-001** How does drill progress extend the initial concept-progress model,
+  and is offline progress worth supporting?
+- **ADR-002** How the Domain layer stays independent of the PostgreSQL database
+  selected in ADR-010; revisit storage only if requirements change.
 - **ADR-003** API shape: endpoints for questions, attempts, due-list. REST resource
   design, status codes, idempotency of "record attempt".
 
 ### P0
-- [ ] `[DIEGO]` Domain + Application layers: entities, the scheduler (ported to C#),
-      repository interfaces. No infrastructure references in these projects.
+- [ ] `[DIEGO]` Domain + Application packages: entities, the scheduler (ported to Go),
+      repository interfaces. No infrastructure imports in these packages.
 - [ ] `[AGENT]` Infrastructure layer implementing the repositories for the database
-      Diego chose; EF Core migrations if he chose a relational DB.
+      Diego chose; migrations if he chose a relational DB.
 - [ ] `[AGENT]` API layer: endpoints from ADR-003, validation, ProblemDetails errors,
       OpenAPI/Swagger.
-- [ ] `[AGENT]` Frontend switches from `localStorage` to the API, with an offline
-      fallback that syncs later (Diego decides the sync rule in an ADR).
+- [ ] `[AGENT]` Frontend integrates drill progress with the API, with an offline
+      fallback only if Diego chooses it (sync rules require an ADR).
 - [ ] `[DIEGO]` Write the ADR explaining the dependency direction, in his own words,
       the way he'd explain the WCF-bridge project in an interview.
 
 **Acceptance:** swapping the database implementation requires changing only the
-Infrastructure project and DI registration — demonstrated by a test using an in-memory
+  Infrastructure package and dependency wiring — demonstrated by a test using an in-memory
 fake repository.
 
 ---
@@ -126,7 +146,7 @@ fake repository.
 ## Phase 3 — AWS serverless deployment (closes the job-application gaps)
 
 Open decisions for Diego:
-- **ADR-004** Compute: ASP.NET Core API hosted on Lambda behind API Gateway vs. a
+- **ADR-004** Compute: Go API hosted on Lambda behind API Gateway vs. a
   container service. Cold starts, cost, operational load.
 - **ADR-005** Data: DynamoDB table design from his access patterns (single table vs one
   table per entity). This is the main learning target.
@@ -174,5 +194,6 @@ AWS. Budget alarm verified.
 ## Open questions
 
 - (Diego, blocking Phase 2) Is moving progress off `localStorage` worth it on its own, or
-  only as a vehicle to practice the backend? Either answer is fine — write it in ADR-001.
-- (Diego, non-blocking) Public repo from day one, or private until Phase 1 is polished?
+  only as a vehicle to practice the backend? Go practice and server-side progress were
+  chosen for Phase 1; document the drill-specific requirements in ADR-001.
+- Resolved by Diego on 2026-10-04: public personal GitHub repo from day one.
