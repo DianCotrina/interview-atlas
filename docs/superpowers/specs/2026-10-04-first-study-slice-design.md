@@ -1,6 +1,6 @@
 # First study slice — design for Diego's review
 
-Date: 2026-10-04. Status: proposed; implementation has not started.
+Date: 2026-10-04. Status: approved by Diego on 2026-10-04; implementation has not started.
 
 ## Intended outcome
 
@@ -41,21 +41,20 @@ above details. Navigation shows sections containing loaded pages. The reading su
 uses a restrained light theme, visible focus states, responsive layout, and system
 fonts. No decorative imagery is needed for this slice.
 
-## Proposed attempt granularity — needs Diego's review
+## Approved attempt granularity
 
 | Option | Benefit | Trade-off |
 | --- | --- | --- |
 | Per question, proposed for this slice | History matches the spec's future question-level scheduler | Each question needs a stable identifier independent of its text |
 | Per concept | Smaller model and UI | Later question-level scheduling needs new history or a migration rule |
 
-Approving this design selects the per-question proposal. Existing drill text remains
+Diego's approval selects the per-question proposal. Existing drill text remains
 unchanged. Question IDs are explicit metadata, not hashes of mutable question text.
 Concept filenames/IDs are stable even if display titles change.
 
-## Proposed storage and HTTP contract
+## Approved storage and HTTP contract
 
-These are reviewable details of the selected attempt-history approach, not additional
-decisions assumed to be accepted.
+Diego approved these details with the written first-slice design.
 
 - One append-only `review_attempts` table: `attempt_id` (UUID primary key),
   `concept_id`, `question_id`, `grade`, and server-assigned UTC `created_at`.
@@ -102,6 +101,8 @@ loop, durable offline queue, or synchronization policy is added in this slice.
 - `gray-matter` parses frontmatter instead of maintaining a custom YAML parser.
 - `react-markdown` renders Markdown instead of maintaining a custom renderer; raw
   HTML stays disabled.
+- `remark-gfm` preserves the source's Markdown tables; the alternative is a custom
+  table renderer. It is an implementation dependency for the approved reading view.
 - Vitest tests content parsing/search; Go's standard test and HTTP packages cover
   the API. No additional HTTP framework or ORM is needed.
 - `pgx` supplies PostgreSQL access/pooling; `database/sql` with a PostgreSQL driver
@@ -110,7 +111,7 @@ loop, durable offline queue, or synchronization policy is added in this slice.
 - Docker Compose runs the chosen PostgreSQL service locally; installing and managing
   a host PostgreSQL service is the alternative.
 
-## Proposed new study copy — AI code review
+## Approved new study copy — AI code review
 
 Title: **Revisar código generado por IA**. Section: **AI Engineering**.
 
