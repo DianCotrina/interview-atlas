@@ -28,11 +28,15 @@ jobs:
         with:
           go-version-file: api/go.mod
           cache-dependency-path: api/go.sum
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: "8.0.x"
       - run: npm ci
       - run: npm test
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
+      - run: dotnet test samples/InterviewAtlas.Samples.Tests --nologo
       - run: go test ./...
         working-directory: api
       - run: go test -race -tags=integration ./...

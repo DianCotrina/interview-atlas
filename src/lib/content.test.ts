@@ -28,7 +28,7 @@ afterEach(() =>
 describe("content validation", () => {
   it("keeps supplied drills in metadata without exposing duplicate answers in the body", () => {
     const concepts = loadConcepts();
-    expect(concepts.flatMap((c) => c.drillQuestions)).toHaveLength(11);
+    expect(concepts.flatMap((c) => c.drillQuestions)).toHaveLength(16);
     for (const concept of concepts) {
       expect(concept.body, concept.id).not.toMatch(/^drill:\s*$/m);
     }
@@ -62,13 +62,17 @@ describe("content validation", () => {
     writeFileSync(join(dir, "two.md"), valid);
     expect(() => loadConcepts(dir)).toThrow(/duplicate.*sample/i);
   });
-  it("loads the approved six concepts and keeps framing's second arrow", () => {
+  it("loads the approved ten concepts and keeps framing's second arrow", () => {
     const concepts = loadConcepts();
     expect(concepts.map((c) => c.id).sort()).toEqual([
       "ai-code-review",
       "airflow-migration",
+      "anagrams",
       "big-o",
       "choosing-collections",
+      "dictionary-counting",
+      "first-duplicate",
+      "grouping",
       "hidden-loop",
       "problem-framing",
     ]);

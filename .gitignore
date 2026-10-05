@@ -10,3 +10,6 @@ api/bin/
 api/.data/
 .sites-runtime/
 *.tsbuildinfo
+samples/**/bin/
+samples/**/obj/
+samples/**/Generated/

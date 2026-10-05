@@ -41,8 +41,8 @@ afterEach(() =>
 it("loads complete translations with the same progress identities", () => {
   const es = loadLocalizedConcepts("es");
   const en = loadLocalizedConcepts("en");
-  expect(en).toHaveLength(6);
-  expect(en.flatMap((c) => c.drillQuestions)).toHaveLength(11);
+  expect(en).toHaveLength(10);
+  expect(en.flatMap((c) => c.drillQuestions)).toHaveLength(16);
   expect(en.map((c) => [c.id, c.drillQuestions.map((q) => q.id)])).toEqual(
     es.map((c) => [c.id, c.drillQuestions.map((q) => q.id)]),
   );
