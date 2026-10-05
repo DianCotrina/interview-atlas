@@ -7,7 +7,7 @@ services are unavailable.
 
 ## Run locally
 
-Prerequisites: Node.js 26, Go 1.27, .NET SDK 8.0.425 or a later 8.0.4xx patch,
+Prerequisites: Node.js 24, Go 1.27, .NET SDK 8.0.425 or a later 8.0.4xx patch,
 Docker with Compose, and Make. `global.json` pins that SDK feature band. Tested locally with
 Go 1.27.1. The app and database bind to loopback; this is a single-user local setup.
 
@@ -178,6 +178,20 @@ The sample project adds xUnit, its VSTest runner, and Microsoft's test SDK for e
 correctness checks; a hand-written console assertion runner was the simpler alternative.
 No frontend game engine or internationalization dependency is added: the current React
 state and static bilingual routing are enough for four deterministic training missions.
+
+## Releases and Vercel
+
+This app follows [SemVer 2.0.0](https://semver.org/). Release Please derives version
+proposals from Conventional Commits, updates the changelog and version files in a
+release PR, and creates a GitHub release/tag when that PR is merged. The sidebar
+displays the build's `package.json` version. `npm run check:version` rejects invalid
+or mismatched versions and runs automatically before every production build.
+
+Read [RELEASING.md](docs/RELEASING.md) for commit examples, the initial `0.1.0`
+release, review/CI behavior and Vercel setup. Node `24.x` is shared by package
+engines and CI. The Vercel frontend build needs only `npm ci` and `npm run build`;
+the current progress API remains local. Release Please is a pinned GitHub Action,
+not an app dependency; the alternative was manual npm version bumps.
 
 ## Current scope and learning ownership
 
