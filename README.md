@@ -47,7 +47,7 @@ only their own uniquely named `atlas_test_*` schemas.
 - English and Spanish interface, explanations, questions and answers. Both versions
   keep English interview phrasing and show unknown STAR metrics in amber.
 - Eleven supplied practice questions with answer reveal and three self-grades:
-  **Lo sabía**, **Dudé**, and **No lo sabía**.
+  **Lo sabía / Knew it**, **Dudé / Hesitated**, and **No lo sabía / Did not know**.
 - Saved attempt counts and the latest grade for each reviewed question.
 - Responsive reading, keyboard controls, visible focus, and reduced-motion support.
 
@@ -97,7 +97,7 @@ retry, or **409** when the same ID carries a different payload.
 
 The UI creates a UUID once per assessment and retains it for an explicit retry.
 Alternative grades stay disabled until the pending review is resolved. Only a
-matching successful response announces **Guardado**. A network/API failure shows
+matching successful response announces **Guardado / Saved**. A network/API failure shows
 an unconfirmed save; reading and answer reveal keep working. Keep the page open to
 retry that same attempt: pending requests are held in memory, with no durable
 offline queue or automatic resends. Reloading discards a pending retry identity;

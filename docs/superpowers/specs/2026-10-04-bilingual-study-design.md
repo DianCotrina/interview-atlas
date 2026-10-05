@@ -22,7 +22,7 @@ feature for implementation, without reopening the progress or deployment decisio
   the first supported browser language (including regional tags), then Spanish.
 - Switching writes a namespaced localStorage preference. Read/write failures are
   tolerated. No IP lookup, country dropdown, middleware, or new dependency.
-- During saving or a failed/unconfirmed review, disable the language selector and
+- During saving or a retryable failed/unconfirmed review, disable the language selector and
   explain that the current review needs confirmation. Do not replace or resend it.
 - Unsupported locale routes and unknown concepts are not generated and return 404.
 

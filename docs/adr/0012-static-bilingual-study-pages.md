@@ -20,6 +20,7 @@
 ## Decision
 
 We choose **Option A**, approved after presenting it as the recommended option.
+Diego's personal rationale remains for him to write: ___.
 Locale-specific Markdown and typed interface dictionaries produce both languages at build time; stable concept/question IDs keep progress independent of language.
 
 ## Consequences
@@ -36,9 +37,13 @@ Locale-specific Markdown and typed interface dictionaries produce both languages
 
 > Two Markdown variants can drift. How will you prevent translations from splitting a question's history or fabricating a behavioral metric?
 
-Implementation checks stable concept/question identities, section/status, interview phrasing and exact placeholder tokens across both variants. Diego's own verbal explanation remains outstanding.
+**Diego's answer:** ___.
+
+**Implementation evidence (agent-written):** checks compare stable concept/question identities, section/status, interview phrasing and exact placeholder tokens across both variants.
 
 ## Say it in the interview (30 seconds)
+
+**Proposed wording for Diego to review:**
 
 "I generate English and Spanish pages statically, while concept and question IDs stay language-independent so switching languages preserves review history. The trade-off is maintaining two content variants, which I check for structural consistency at build time."
 
