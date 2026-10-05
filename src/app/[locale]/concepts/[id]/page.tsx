@@ -71,7 +71,7 @@ export default async function ConceptPage({
           <ConceptMarkdown body={concept.summary} locale={locale} />
         </section>
         <section className="interview-box" aria-labelledby="interview-heading">
-          <h2 id="interview-heading">
+          <h2 id="interview-heading" lang="en">
             <span aria-hidden="true">“</span>
             {text.interview}
           </h2>

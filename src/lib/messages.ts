@@ -16,6 +16,7 @@ const english = {
   },
   language: {
     label: "Language",
+    hint: "Changing language opens this page in the selected language.",
     pending: "Confirm this review before changing language.",
   },
   sections: {
@@ -117,13 +118,14 @@ const spanish: typeof english = {
   },
   language: {
     label: "Idioma",
+    hint: "Al cambiar, abrirás esta página en el idioma elegido.",
     pending: "Confirma este repaso antes de cambiar de idioma.",
   },
   sections: {
     Fundamentals: "Fundamentos",
     Patterns: "Patrones",
     Behavioral: "Historias STAR",
-    "AI Engineering": "AI code review",
+    "AI Engineering": "Revisión con IA",
   },
   statuses: {
     learned: "Aprendido",

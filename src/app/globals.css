@@ -136,6 +136,10 @@ h3 {
   font-size: 12px;
   color: #f6d293;
 }
+.language-picker .language-hint {
+  color: #c2cfe1;
+  line-height: 1.4;
+}
 .locale-entry {
   max-width: 520px;
   margin: 15vh auto;

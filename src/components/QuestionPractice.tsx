@@ -2,7 +2,10 @@
 
 import { useEffect, useId, useReducer, useRef, useState } from "react";
 import type { DrillQuestion } from "@/lib/content";
-import { assessmentReducer } from "@/lib/assessment-session";
+import {
+  assessmentReducer,
+  blocksLanguageSwitch,
+} from "@/lib/assessment-session";
 import {
   ProgressAPIError,
   recordAttempt,
@@ -35,7 +38,7 @@ function Question({
   const text = messages[locale].practice;
   const gradeLabels = messages[locale].grades;
   const { setPending } = useReviewNavigation();
-  const pending = state.status === "saving" || state.status === "failed";
+  const pending = blocksLanguageSwitch(state);
   useEffect(() => {
     setPending(answerId, pending);
     return () => setPending(answerId, false);

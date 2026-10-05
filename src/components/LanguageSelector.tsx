@@ -22,7 +22,7 @@ export function LanguageSelector({ locale }: { locale: Locale }) {
         id={id}
         value={locale}
         disabled={pending}
-        aria-describedby={pending ? `${id}-reason` : undefined}
+        aria-describedby={`${id}-hint${pending ? ` ${id}-reason` : ""}`}
         onChange={(event) => {
           const selected = event.target.value;
           if (!isLocale(selected) || pending) return;
@@ -44,11 +44,10 @@ export function LanguageSelector({ locale }: { locale: Locale }) {
           English
         </option>
       </select>
-      {pending && (
-        <p id={`${id}-reason`} role="status">
-          {text.pending}
-        </p>
-      )}
+      <p id={`${id}-hint`} className="language-hint">
+        {text.hint}
+      </p>
+      {pending && <p id={`${id}-reason`}>{text.pending}</p>}
     </div>
   );
 }

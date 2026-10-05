@@ -17,6 +17,12 @@ export type AssessmentAction =
   | { type: "saved"; attempt: Attempt }
   | { type: "reset" };
 
+export function blocksLanguageSwitch(state: AssessmentState): boolean {
+  return (
+    state.status === "saving" || (state.status === "failed" && state.retryable)
+  );
+}
+
 export function assessmentReducer(
   state: AssessmentState,
   action: AssessmentAction,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assessmentReducer } from "./assessment-session";
+import { assessmentReducer, blocksLanguageSwitch } from "./assessment-session";
 import type { AttemptInput } from "./progress-api";
 
 const input: AttemptInput = {
@@ -11,6 +11,34 @@ const input: AttemptInput = {
 const attempt = { ...input, createdAt: "2026-10-04T12:00:00Z" };
 
 describe("assessment session", () => {
+  it("blocks language changes while saving and releases after confirmation", () => {
+    const saving = assessmentReducer(
+      { status: "idle" },
+      { type: "start", input },
+    );
+    expect(blocksLanguageSwitch({ status: "idle" })).toBe(false);
+    expect(blocksLanguageSwitch(saving)).toBe(true);
+    expect(
+      blocksLanguageSwitch(
+        assessmentReducer(saving, { type: "saved", attempt }),
+      ),
+    ).toBe(false);
+  });
+  it("protects the retry identity after a retryable failure", () => {
+    const failed = assessmentReducer(
+      { status: "saving", input },
+      { type: "fail", message: "Unavailable" },
+    );
+    expect(blocksLanguageSwitch(failed)).toBe(true);
+  });
+  it("allows language changes after a definitive conflict rejection", () => {
+    const failed = assessmentReducer(
+      { status: "saving", input },
+      { type: "fail", message: "Conflict", retryable: false },
+    );
+    expect(blocksLanguageSwitch(failed)).toBe(false);
+    expect(assessmentReducer(failed, { type: "retry" })).toEqual(failed);
+  });
   it("does not retry a permanent attempt conflict", () => {
     const saving = assessmentReducer(
       { status: "idle" },
