@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
+import { defaultLocale, isLocale, type Locale } from "./locale";
+import { splitPlaceholders } from "./placeholders";
 
 export type StudyStatus = "learned" | "in-progress" | "pending";
 export type DrillQuestion = { id: string; question: string; answer: string };
@@ -83,7 +85,7 @@ export function parseConcept(source: string, file: string): Concept {
   }
 }
 export function loadConcepts(
-  directory = join(process.cwd(), "content"),
+  directory = join(process.cwd(), "content", defaultLocale),
 ): Concept[] {
   const files = (folder: string): string[] =>
     readdirSync(folder, { withFileTypes: true }).flatMap((entry) => {
@@ -104,4 +106,60 @@ export function loadConcepts(
       ids.add(concept.id);
       return concept;
     });
+}
+
+export function loadLocalizedConcepts(
+  locale: Locale,
+  root = join(process.cwd(), "content"),
+): Concept[] {
+  if (!isLocale(locale)) throw new Error("Unsupported locale");
+  const spanish = loadConcepts(join(root, "es"));
+  const english = loadConcepts(join(root, "en"));
+  if (
+    spanish
+      .map((c) => c.id)
+      .sort()
+      .join("|") !==
+    english
+      .map((c) => c.id)
+      .sort()
+      .join("|")
+  )
+    throw new Error("Translation concept IDs must match across es and en");
+  const placeholders = (concept: Concept) =>
+    [
+      concept.title,
+      concept.summary,
+      concept.body,
+      concept.interviewLine,
+      ...concept.drillQuestions.flatMap((q) => [q.question, q.answer]),
+    ]
+      .flatMap((text) =>
+        splitPlaceholders(text)
+          .filter((token) => token.kind === "placeholder")
+          .map((token) => token.text),
+      )
+      .sort()
+      .join("|");
+  for (const original of spanish) {
+    const translation = english.find((c) => c.id === original.id)!;
+    if (
+      original.drillQuestions.map((q) => q.id).join("|") !==
+      translation.drillQuestions.map((q) => q.id).join("|")
+    )
+      throw new Error(`${original.id}: translation question IDs must match`);
+    if (
+      original.status !== translation.status ||
+      original.section !== translation.section ||
+      original.interviewLine !== translation.interviewLine
+    )
+      throw new Error(
+        `${original.id}: translation study identity and interview sentence must match`,
+      );
+    if (placeholders(original) !== placeholders(translation))
+      throw new Error(
+        `${original.id}: translation must preserve all placeholder tokens`,
+      );
+  }
+  return locale === "es" ? spanish : english;
 }

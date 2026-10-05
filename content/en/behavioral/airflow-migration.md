@@ -19,4 +19,4 @@ retries a single failed task instead of rerunning the whole pipeline — diagnos
 from a manual log hunt to a few clicks. [COMPLETAR: número de jobs migrados]
 [COMPLETAR: tiempo aproximado de diagnóstico antes, ej. "30–60 min"].
 
-Nota: hablar de impacto para el equipo de soporte, no de features.
+Note: talk about the impact on the support team, not features.
