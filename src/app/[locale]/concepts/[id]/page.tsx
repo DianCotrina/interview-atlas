@@ -8,6 +8,7 @@ import { ConceptMarkdown } from "@/components/ConceptMarkdown";
 import { QuestionPractice } from "@/components/QuestionPractice";
 import { MissionInvitation } from "@/components/MissionInvitation";
 import { missionIds } from "@/lib/collection-game";
+import { plainSummary } from "@/lib/summary";
 
 export const dynamicParams = false;
 export function generateStaticParams({
@@ -32,7 +33,7 @@ export async function generateMetadata({
   );
   return {
     title: concept?.title ?? messages[locale].concept.notFound,
-    description: concept?.summary,
+    description: concept ? plainSummary(concept.summary) : undefined,
     alternates: {
       languages: {
         es: localeHref("es", `/concepts/${id}/`),

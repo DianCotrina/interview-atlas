@@ -51,6 +51,7 @@ public partial class StudySamples
     [InlineData("abc", "abd", false)]
     [InlineData("A", "a", false)]
     [InlineData("é", "é", true)]
+    [InlineData("é", "e\u0301", false)]
     [InlineData("😀a", "a😀", true)]
     public void AnagramsCompareCaseSensitiveUtf16Frequencies(string a, string b, bool expected)
         => Assert.Equal(expected, SonAnagramas(a, b));

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
+import { extractCsharpFences } from "./csharp-fences.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 function snippets(locale) {
@@ -12,8 +13,8 @@ function snippets(locale) {
       if (entry.isDirectory()) visit(path);
       else if (entry.name.endsWith(".md")) {
         const { data, content } = matter(readFileSync(path, "utf8"));
-        const blocks = [...content.matchAll(/^```csharp\r?\n([\s\S]*?)^```\s*$/gm)]
-          .map((match) => match[1].trimEnd());
+        const displayed = [content, data.summary ?? "", ...(data.drillQuestions ?? []).map((q) => q.answer)];
+        const blocks = displayed.flatMap((source) => extractCsharpFences(source, path));
         if (blocks.length) result.set(data.id, blocks);
       }
     }

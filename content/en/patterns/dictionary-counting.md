@@ -4,7 +4,7 @@ title: "Dictionary counting"
 section: "Patterns"
 tags: ["hashmap", "counting", "frequencies"]
 status: "learned"
-summary: "The dictionary remembers counts as you move forward, so you do not go back."
+summary: "Why it is O(n): the dictionary **remembers** — it stores counts as you move forward, so you do not go back."
 interviewLine: "Single pass with a dictionary: if the key exists I increment, otherwise I start it at one. O(n) time, O(k) space."
 drillQuestions: [{"id": "counting-branches", "question": "The two branches of the counting pattern.", "answer": "If it exists: conteo[c]++. Otherwise: conteo[c] = 1."}, {"id": "most-frequent", "question": "How do you find the most frequent key?", "answer": "A second sequential loop with mejorClave and mejorConteo, updating both together."}]
 ---

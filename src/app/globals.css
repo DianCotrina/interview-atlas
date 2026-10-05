@@ -1175,3 +1175,14 @@ h3 {
   .answer-tiles button:active:not(:disabled) { transform: none; }
 }
 .mission-input .input-current { background: #ffe293; color: #172c43; border-color: #ffe293; }
+.prose pre { overflow-x: auto; background: #edf1f6; border: 1px solid #d1ddee; border-radius: 8px; padding: 16px; line-height: 1.6; }
+.prose pre code { border: 0; padding: 0; border-radius: 0; font-size: 12px; }
+.game-intro > div:first-child { min-width: 0; }
+@media (max-width: 740px) {
+  .sidebar nav { display: flex; gap: 3px; }
+}
+@media (max-width: 650px) {
+  .game-intro { display: block; }
+  .game-score { display: flex; gap: 9px; margin-top: 16px; }
+  .game-score > span:last-child { max-width: none; }
+}

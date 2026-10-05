@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useReducer, useRef } from "react";
-import { complexityOptions, createGameState, gameReducer, missions, type Collection } from "../lib/collection-game";
+import { useEffect, useId, useRef } from "react";
+import { complexityOptions, missions, type Collection } from "../lib/collection-game";
 import { gameCopy } from "../lib/game-copy";
 import { localeHref, type Locale } from "../lib/locale";
 import { CollectionBoard } from "./CollectionBoard";
+import { useCollectionGame } from "./CollectionGameSession";
 
 const collections: Collection[] = ["list", "set", "counts", "groups"];
 
 export function CollectionGame({ locale }: { locale: Locale }) {
-  const [state, dispatch] = useReducer(gameReducer, undefined, createGameState);
+  const { state, dispatch } = useCollectionGame();
   const text = gameCopy[locale];
   const mission = missions.find((m) => m.id === state.missionId)!;
   const copy = text.missions[mission.id];
@@ -33,7 +34,7 @@ export function CollectionGame({ locale }: { locale: Locale }) {
   const feedback = state.phase === "structure" ? copy.structure
     : state.phase === "trace" ? text.reasons[step.reason] : copy.complexity;
   const wrongFeedback = state.phase === "structure" ? text.wrongStructure
-    : state.phase === "trace" ? text.wrongTrace : text.wrongComplexity;
+    : state.phase === "trace" ? text.wrongReasons[step.reason] : text.wrongComplexity;
   const rows = state.phase === "structure" ? []
     : state.phase === "trace" ? (state.solved ? step.after : step.before)
     : mission.steps.at(-1)!.after;
@@ -59,8 +60,9 @@ export function CollectionGame({ locale }: { locale: Locale }) {
             aria-pressed={item.id === mission.id}
             onClick={() => dispatch({ type: "select", missionId: item.id })}>
             <span className="mission-node-icon" aria-hidden="true">{state.earned[item.id] === 3 ? "✓" : index + 1}</span>
-            <span><strong>{text.missions[item.id].title}</strong><span className="mission-node-stars" aria-label={`${state.earned[item.id]} / 3 ${text.stars}`}>
+            <span><strong>{text.missions[item.id].title}</strong><span className="mission-node-stars">
               <span aria-hidden="true">{"★".repeat(state.earned[item.id])}{"☆".repeat(3 - state.earned[item.id])}</span>
+              <span className="sr-only">{state.earned[item.id]} / 3 {text.stars}</span>
             </span></span>
           </button>
         ))}
@@ -112,7 +114,7 @@ export function CollectionGame({ locale }: { locale: Locale }) {
                 </div>
               </fieldset>
               <div className={`mission-feedback ${state.verdict ?? ""}`} aria-live="polite" aria-atomic="true">
-                {state.verdict && <p><strong>{state.verdict === "correct" ? text.correct : text.wrong}</strong> {state.verdict === "correct" ? feedback : wrongFeedback}</p>}
+                {state.verdict && <p><strong>{state.verdict === "correct" ? text.correct : text.wrong}</strong> {text.attempt} {state.feedbackSequence}. {state.verdict === "correct" ? feedback : wrongFeedback}</p>}
               </div>
               <div className="mission-actions">
                 {state.solved && <button ref={continueButton} className="game-primary" onClick={() => dispatch({ type: "next" })}>{text.next}</button>}
@@ -135,7 +137,7 @@ export function CollectionGame({ locale }: { locale: Locale }) {
         </aside>
       </div>
       <p className="game-session-note">{text.session}</p>
-      <noscript><p>{text.read}: {missions.map((m) => <a key={m.id} href={localeHref(locale, `/concepts/${m.id}/`)}> {text.missions[m.id].title} </a>)}</p></noscript>
+      <noscript><p>{text.noScript} {text.read}: {missions.map((m) => <a key={m.id} href={localeHref(locale, `/concepts/${m.id}/`)}> {text.missions[m.id].title} </a>)}</p></noscript>
     </div>
   );
 }

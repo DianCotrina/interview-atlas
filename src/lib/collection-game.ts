@@ -12,7 +12,7 @@ export function complexityOptions(id: MissionId): Complexity[] {
 export type Mission = { id: MissionId; collection: Collection; complexity: Complexity; input: string[]; steps: TraceStep[] };
 export const missions: Mission[] = [
   { id: "dictionary-counting", collection: "counts", complexity: "linear-distinct", input: ["OK", "WAIT", "OK", "FAIL", "OK"], steps: countingTrace(["OK", "WAIT", "OK", "FAIL", "OK"]) },
-  { id: "grouping", collection: "groups", complexity: "linear-all", input: ["Ada: scan", "Lin: check", "Ada: review", "Lin: scan"], steps: groupingTrace([["Ada", "scan"], ["Lin", "check"], ["Ada", "review"], ["Lin", "scan"]]) },
+  { id: "grouping", collection: "groups", complexity: "linear-all", input: ["Ada: scan", "Lin: check", "Ada: scan", "Lin: scan"], steps: groupingTrace([["Ada", "scan"], ["Lin", "check"], ["Ada", "scan"], ["Lin", "scan"]]) },
   { id: "first-duplicate", collection: "set", complexity: "linear-all", input: ["A", "B", "B", "A"], steps: duplicateTrace(["A", "B", "B", "A"]) },
   { id: "anagrams", collection: "counts", complexity: "linear-distinct", input: ['a = "aab"', 'b = "abb"'], steps: anagramTrace("aab", "abb") },
 ];
@@ -24,11 +24,12 @@ export type GameState = {
   solved: boolean;
   verdict: "correct" | "wrong" | null;
   hint: boolean;
+  feedbackSequence: number;
   earned: Record<MissionId, number>;
 };
 export type GameAction = { type: "answer"; value: string } | { type: "next" } | { type: "hint" } | { type: "replay" } | { type: "select"; missionId: MissionId };
 export function createGameState(): GameState {
-  return { missionId: "dictionary-counting", phase: "structure", cursor: 0, solved: false, verdict: null, hint: false,
+  return { missionId: "dictionary-counting", phase: "structure", cursor: 0, solved: false, verdict: null, hint: false, feedbackSequence: 0,
     earned: { "dictionary-counting": 0, grouping: 0, "first-duplicate": 0, anagrams: 0 } };
 }
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -54,9 +55,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   if (!choices.includes(action.value)) return state;
   const expected = state.phase === "structure" ? mission.collection
     : state.phase === "trace" ? mission.steps[state.cursor].expected : mission.complexity;
-  if (action.value !== expected) return { ...state, verdict: "wrong" };
+  if (action.value !== expected) return { ...state, verdict: "wrong", feedbackSequence: state.feedbackSequence + 1 };
   const stars = state.phase === "structure" ? 1 : state.phase === "complexity" ? 3
     : state.cursor === mission.steps.length - 1 ? 2 : 1;
-  return { ...state, solved: true, verdict: "correct",
+  return { ...state, solved: true, verdict: "correct", feedbackSequence: state.feedbackSequence + 1,
     earned: { ...state.earned, [state.missionId]: Math.max(state.earned[state.missionId], stars) } };
 }

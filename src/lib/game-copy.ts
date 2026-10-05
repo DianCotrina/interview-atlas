@@ -7,17 +7,18 @@ type GameCopy = {
   title: string; intro: string; enter: string; campaign: string; map: string; stars: string;
   session: string; phases: Record<Exclude<Phase, "complete">, string>;
   structurePrompt: string; tracePrompt: string; complexityPrompt: string;
-  collection: string; input: string; current: string; empty: string; choose: string;
+  collection: string; input: string; current: string; empty: string; choose: string; attempt: string; noScript: string;
   correct: string; wrong: string; wrongTrace: string; wrongStructure: string; wrongComplexity: string;
   next: string; step: string; showHint: string; hideHint: string; read: string; replay: string;
   complete: string; completed: string; rewardNote: string; nextMission: string; allDone: string;
   collectionNames: Record<Collection, string>; complexityNames: Record<Complexity, string>;
   decisions: Record<Decision, string>; reasons: Record<Reason, string>;
+  wrongReasons: Record<Reason, string>;
   missions: Record<MissionId, MissionCopy>;
 };
 
 const english: GameCopy = {
-  title: "The collection quest", intro: "Choose your tool. Make each move. Explain why it works.",
+  title: "The collection quest", intro: "Choose your tool. Make each move. Explain why it works.", attempt: "Decision", noScript: "Playing requires JavaScript. The study pages remain readable without it.",
   enter: "Start playing", campaign: "Four missions. No clock. Think it through.",
   map: "Choose a mission", stars: "objective stars", session: "Stars and badges last for this session. Reloading or changing language starts a new game; saved study reviews stay in your history.",
   phases: { structure: "Choose your tool", trace: "Make your moves", complexity: "Explain the cost" },
@@ -40,6 +41,13 @@ const english: GameCopy = {
     "same-frequency": "This character has the same frequency in both maps. Continue checking the remaining keys.",
     "different-frequency": "A character frequency differs. Equal length alone is not enough: return false.", "empty-anagrams": "Both strings are empty, so their lengths and frequencies match.",
   },
+  wrongReasons: {
+    "new-key": "There is no stored count for this key yet. Start it at one.", "known-key": "A count already exists. Recreating the entry would discard its earlier occurrences.",
+    "new-group": "There is no list for this group yet. Create it with the current action.", "known-group": "The list already contains earlier actions. Append instead of replacing it.",
+    unseen: "This value is not in the set, so it is not a duplicate yet.", repeated: "This value is already in the set. Continuing would skip the earliest second occurrence.",
+    "equal-length": "Equal lengths do not prove anagrams, but they do allow counting. Continue to compare frequencies.", "unequal-length": "One string has extra character units. Reject it before counting.",
+    "same-frequency": "The counts shown for this character are equal. This comparison has no mismatch.", "different-frequency": "Read the two displayed counts: they differ, so the strings cannot be anagrams.", "empty-anagrams": "Both strings are empty. There is no extra character or mismatched frequency.",
+  },
   missions: {
     "dictionary-counting": { title: "Count the signals", goal: "Count how many times each status arrives: OK, WAIT and FAIL.", hint: "For every status, ask: have I already stored a count for this key?", structure: "A dictionary stores one running count per distinct status.", complexity: "One pass, with average constant-time hash operations. Keep one count per distinct key.", definitions: "n = number of items; k = distinct status keys. Hash-operation costs are average-case.", badge: "Signal counter" },
     grouping: { title: "Assemble the crews", goal: "Group each person's actions. Keep repeated actions and their input order.", hint: "The value needs to hold every action, not just the number of actions.", structure: "A dictionary of lists keeps every action under its person's key.", complexity: "One pass with average hash costs and amortized list appends. All n actions stay in memory.", definitions: "n = number of records; k = number of groups. Measure all stored actions, not only the keys.", badge: "Crew organizer" },
@@ -49,7 +57,7 @@ const english: GameCopy = {
 };
 
 const spanish: GameCopy = {
-  title: "La misión de las colecciones", intro: "Elige tu herramienta. Decide cada movimiento. Explica por qué funciona.",
+  title: "La misión de las colecciones", intro: "Elige tu herramienta. Decide cada movimiento. Explica por qué funciona.", attempt: "Decisión", noScript: "Para jugar necesitas JavaScript. Las páginas de estudio se pueden leer sin él.",
   enter: "Empezar a jugar", campaign: "Cuatro misiones. Sin reloj. Piensa cada decisión.",
   map: "Elige una misión", stars: "estrellas de objetivos", session: "Las estrellas e insignias duran esta partida. Recargar o cambiar de idioma inicia otra; tus autoevaluaciones guardadas siguen en el historial.",
   phases: { structure: "Elige tu herramienta", trace: "Haz tus movimientos", complexity: "Explica el costo" },
@@ -71,6 +79,13 @@ const spanish: GameCopy = {
     "equal-length": "Los largos iguales permiten contar. Todavía no prueban que sean anagramas.", "unequal-length": "Con largos diferentes no pueden ser anagramas. Descarta antes de contar.",
     "same-frequency": "Este carácter aparece la misma cantidad de veces en ambos mapas. Continúa revisando las claves restantes.",
     "different-frequency": "Una frecuencia es diferente. Los largos iguales no bastan: devuelve false.", "empty-anagrams": "Ambas cadenas están vacías, así que sus largos y frecuencias coinciden.",
+  },
+  wrongReasons: {
+    "new-key": "Todavía no hay un conteo guardado para esta clave. Inícialo en uno.", "known-key": "El conteo ya existe. Crear otra entrada descartaría las apariciones anteriores.",
+    "new-group": "Todavía no existe una lista para este grupo. Créala con la acción actual.", "known-group": "La lista ya guarda acciones anteriores. Agrega la nueva en lugar de reemplazarla.",
+    unseen: "Este valor no está en el conjunto, así que todavía no es un repetido.", repeated: "Este valor ya está en el conjunto. Continuar saltaría la segunda aparición más temprana.",
+    "equal-length": "Los largos iguales no prueban que sean anagramas, pero permiten contar. Continúa para comparar frecuencias.", "unequal-length": "Una cadena tiene unidades de carácter adicionales. Descártala antes de contar.",
+    "same-frequency": "Los conteos mostrados para este carácter son iguales. Aquí no hay una diferencia.", "different-frequency": "Mira los dos conteos: son diferentes, así que las cadenas no pueden ser anagramas.", "empty-anagrams": "Ambas cadenas están vacías. No hay caracteres adicionales ni frecuencias diferentes.",
   },
   missions: {
     "dictionary-counting": { title: "Cuenta las señales", goal: "Cuenta cuántas veces llega cada estado: OK, WAIT y FAIL.", hint: "Para cada estado, pregúntate: ¿ya guardé un conteo para esta clave?", structure: "Un diccionario guarda un conteo acumulado por cada estado distinto.", complexity: "Un recorrido, con operaciones hash de costo constante promedio. Guarda un conteo por clave distinta.", definitions: "n = cantidad de elementos; k = claves de estado distintas. El costo de las operaciones hash es promedio.", badge: "Contador de señales" },

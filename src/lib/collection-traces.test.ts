@@ -40,6 +40,7 @@ it.each([
   ["A", "a", "false"],
   ["", "", "true"],
   ["😀a", "a😀", "true"],
+  ["é", "e\u0301", "false"],
 ])("compares C# UTF-16 char frequencies for %s / %s", (a, b, result) => {
   expect(anagramTrace(a, b).at(-1)?.after.at(-1)).toEqual({ key: "return", value: result });
 });

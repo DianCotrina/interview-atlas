@@ -5,6 +5,7 @@ import type { CatalogEntry } from "../lib/content";
 import { filterConcepts } from "../lib/search";
 import { localeHref, type Locale } from "../lib/locale";
 import { messages } from "../lib/messages";
+import { plainSummary } from "../lib/summary";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
@@ -87,7 +88,7 @@ export function ConceptCatalog({
                   </span>
                 </div>
                 <h3>{concept.title}</h3>
-                <p>{concept.summary}</p>
+                <p>{plainSummary(concept.summary)}</p>
                 <div className="tags">
                   {concept.tags.slice(0, 3).map((tag) => (
                     <span key={tag}>{tag}</span>

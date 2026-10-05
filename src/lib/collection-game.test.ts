@@ -58,3 +58,12 @@ it("allows hints without advancing the board or changing rewards", () => {
   expect(state.solved).toBe(false);
   expect(state.earned["dictionary-counting"]).toBe(0);
 });
+
+it("gives repeated wrong answers a fresh feedback identity", () => {
+  const once = gameReducer(createGameState(), { type: "answer", value: "set" });
+  const twice = gameReducer(once, { type: "answer", value: "set" });
+  expect(once.feedbackSequence).toBe(1);
+  expect(twice.feedbackSequence).toBe(2);
+  expect(twice.solved).toBe(false);
+  expect(twice.earned).toEqual(once.earned);
+});
