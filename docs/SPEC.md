@@ -51,7 +51,7 @@ Concept pages are built from Markdown and exported as a static Next.js site. A G
 stores study progress from this phase. An API outage must not prevent reading concepts.
 Diego selected PostgreSQL and review-attempt history and approved the first-slice
 design, including its schema and retry behavior. ADR drafts still need his own
-interview defense. The implemented slice loads six concepts and records eleven
+interview defense. The implemented slice loads ten concepts and records sixteen
 supplied question assessments; the remaining Phase 1 tasks below stay open.
 Start with one useful slice; the original frontend-only weekend estimate no longer
 covers the expanded scope.
@@ -85,8 +85,12 @@ covers the expanded scope.
       (a) List vs HashSet vs Dictionary lookup-cost race, (b) two pointers from both
       ends — two-sum and palindrome, (c) slow/fast pointers — remove duplicates.
       Step / auto / reset controls; narration of each decision.
-- [ ] `[AGENT]` C# sample tests: a small `samples/` .NET 8 test project containing
-      every C# snippet shown on the site, with xUnit tests. CI fails if a snippet breaks.
+- [x] `[AGENT]` Collection missions: four bilingual untimed games for counting,
+      grouping, first duplicate and anagrams, with visible decisions, hints and
+      session-only badges. Diego selected this game style; Go self-grades stay explicit.
+- [x] `[AGENT]` C# sample tests: a small `samples/` .NET 8 test project containing
+      every complete fenced C# algorithm shown on the site, with xUnit tests. CI fails
+      if a sample breaks. Inline syntax fragments are prose examples, not standalone methods.
 - [ ] `[DIEGO]` **Spaced-repetition scheduler** (pure TypeScript function, no UI).
       Leitner boxes: intervals 1, 2, 4, 8, 16 days. Self-grade "knew it" moves up a box;
       "hesitated" stays; "didn't know" resets to box 1. Diego writes it; agent reviews
@@ -104,7 +108,7 @@ covers the expanded scope.
   visible without scrolling on a laptop screen.
 - Given due drill questions, when Diego self-grades "didn't know", that question
   reappears the next day.
-- Every C# snippet on the site compiles and passes its test in CI.
+- Every complete fenced C# algorithm on the site compiles and passes its test in CI.
 - No `[COMPLETAR]` placeholder has been replaced by invented data.
 - Concept pages remain readable when the progress API is unavailable.
 

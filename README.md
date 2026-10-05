@@ -7,7 +7,8 @@ services are unavailable.
 
 ## Run locally
 
-Prerequisites: Node.js 26, Go 1.27, Docker with Compose, and Make. Tested locally with
+Prerequisites: Node.js 26, Go 1.27, .NET SDK 8.0.425 or a later 8.0.4xx patch,
+Docker with Compose, and Make. `global.json` pins that SDK feature band. Tested locally with
 Go 1.27.1. The app and database bind to loopback; this is a single-user local setup.
 
 ```sh
@@ -42,19 +43,45 @@ only their own uniquely named `atlas_test_*` schemas.
 ## What works
 
 - Search by title or tag, with accent-insensitive matching and section filters.
-- Six concepts: Big O, hidden loops, collection selection, problem framing,
-  Airflow STAR story, and an AI-generated code review checklist.
+- Ten concepts: Big O, hidden loops, collection selection, problem framing,
+  dictionary counting, grouping, first duplicate, anagrams, Airflow STAR story,
+  and an AI-generated code review checklist.
 - English and Spanish interface, explanations, questions and answers. Both versions
   keep English interview phrasing and show unknown STAR metrics in amber.
-- Eleven supplied practice questions with answer reveal and three self-grades:
+- Sixteen supplied practice questions with answer reveal and three self-grades:
   **Lo sabía / Knew it**, **Dudé / Hesitated**, and **No lo sabía / Did not know**.
 - Saved attempt counts and the latest grade for each reviewed question.
 - Responsive reading, keyboard controls, visible focus, and reduced-motion support.
+- Four untimed collection missions with a visible traversal board, hints, objective
+  stars and completion badges. Open `/es/play/` or `/en/play/`, or choose Start playing.
+- The displayed fenced C# algorithms compile and pass 17 xUnit cases on .NET 8.
 
 The static source status (`learned`, `in-progress`, `pending`) describes existing
 study material. It is separate from saved review grades and is never automatically
 rewritten by an assessment. The STAR page has no grading controls because its seed
 does not supply a drill answer.
+
+## Collection game
+
+Each mission asks for the smallest suitable collection, the next traversal decision,
+and the time/space cost for an arbitrary input. Wrong answers keep the board unchanged;
+correct decisions visibly update it. Continue advances explicitly. Native buttons,
+focus transfer and hints support keyboard play without a clock or motion requirement.
+The four missions cover counting, grouping, earliest second occurrence and anagrams.
+
+Stars and badges are in-memory rewards for completed objectives in this session.
+Replays retain the earned maximum of three stars per mission without awarding duplicates.
+The locale layout holds the in-memory session, so visiting a concept and returning
+to the game preserves the board and rewards.
+Reloading or switching languages resets the game session. They are never presented
+as inferred mastery and never automatically submit grades to Go. Follow Read the
+concept to review the seed explanation and explicitly self-assess its supplied drills.
+Game interactions continue to work when the progress API is unavailable.
+
+The Spanish explanations and methods are imported from the seed verbatim; summaries
+and missing English interview sentences describe those algorithms. Translations
+retain the original code (including source names/comments), so both versions compile
+the same study example. New app code uses English names/comments.
 
 ## Language selection
 
@@ -127,10 +154,18 @@ make check
 ```
 
 `make check` runs frontend tests, strict type checking, linting, Go unit tests,
-real PostgreSQL integration tests with the race detector, and both builds. The
+real PostgreSQL integration tests with the race detector, C# sample tests, and both builds. The
 integration tests cover concurrent retries, conflict handling, persistence across
 connections, CORS, input rejection, and database outages. GitHub Actions repeats
 these checks against its own disposable PostgreSQL service. No deployment jobs run.
+
+`make test-samples` invokes .NET 8 xUnit. Its MSBuild target extracts the exact C#
+fenced methods from Markdown into an ignored partial class before compilation.
+The tests live in that same partial class, so original method bodies/declarations
+need no edits. Extraction rejects code differences between languages, an unregistered
+sample, or extra snippets without test registration. Install the SDK using
+[Microsoft's instructions](https://learn.microsoft.com/en-us/dotnet/core/install/macos),
+or pass `make check DOTNET=/absolute/path/to/dotnet` for an existing custom installation.
 
 Tooling dependencies: gray-matter parses validated frontmatter; react-markdown
 renders content without raw HTML; remark-gfm preserves the seed's tables. The
@@ -139,12 +174,17 @@ and authoring complexity here. pgx is the PostgreSQL driver instead of a separat
 `database/sql` adapter. Vitest, TypeScript ESLint, and React hook rules supply local
 checks. Next's full lint preset was replaced after its transitive dependency audit
 reported an unpatched advisory; the production build still checks Next integration.
+The sample project adds xUnit, its VSTest runner, and Microsoft's test SDK for executable
+correctness checks; a hand-written console assertion runner was the simpler alternative.
+No frontend game engine or internationalization dependency is added: the current React
+state and static bilingual routing are enough for four deterministic training missions.
 
 ## Current scope and learning ownership
 
 This is the first usable vertical slice, **not the completed Phase 1 roadmap**.
 [SPEC.md](docs/SPEC.md) keeps the remaining work visible: more seed concepts,
-visualizers, C# sample compilation tests, and the scheduled drill experience.
+visualizers, C# syntax highlighting, and the scheduled drill experience.
+The current four C# algorithm samples are covered; future samples must extend that suite.
 The referenced visualizer HTML source files were not included in this repository.
 
 The spaced-repetition scheduler and later Domain/Application exercises are tagged
@@ -167,9 +207,9 @@ record the evidence, trade-offs, and deferred summary refinement.
 
 ## What changed and why
 
-Markdown becomes static HTML so interview reminders remain available during outages.
-Go records immutable review attempts; PostgreSQL makes concurrent retries count once.
-The client confirms saves explicitly and retains the original ID for manual retries.
-This small slice proves the stack while leaving Diego's learning exercises under his ownership.
-Language-specific static URLs make the chosen language shareable without API access.
-Translation identity checks preserve the same review history across Spanish and English.
+Static Markdown keeps reminders readable during API outages.
+Go and PostgreSQL store explicit reviews with idempotent retries.
+Shared question IDs preserve history across English and Spanish.
+Untimed missions expose collection decisions and traversal state.
+A locale-level provider keeps game rewards while browsing concepts.
+Markdown-derived C# methods compile in CI so study examples cannot drift.
