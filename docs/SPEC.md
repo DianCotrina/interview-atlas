@@ -76,6 +76,9 @@ covers the expanded scope.
       highlighted (e.g. amber badge "needs your real number").
 - [x] `[AGENT]` Concept page layout: summary and "Say it in the interview" (English)
       box first, then expandable detail and related pages (approved first-slice layout).
+- [x] `[AGENT]` English/Spanish selection: static `/es/` and `/en/` reading pages,
+      localized interface and study material, browser-language initialization, saved
+      manual choice, and shared progress identities (Diego approved ADR-012).
 - [x] `[AGENT]` Add an AI code-review study page and checklist. Propose new study
       wording for Diego to review; do not silently rewrite existing seed content.
 - [ ] `[AGENT]` Visualizers (port and improve from Diego's two existing HTML pages):

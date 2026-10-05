@@ -44,8 +44,8 @@ only their own uniquely named `atlas_test_*` schemas.
 - Search by title or tag, with accent-insensitive matching and section filters.
 - Six concepts: Big O, hidden loops, collection selection, problem framing,
   Airflow STAR story, and an AI-generated code review checklist.
-- Spanish study explanations and the source's English interview phrasing. The
-  original STAR story remains in English; its unknown metrics stay visible in amber.
+- English and Spanish interface, explanations, questions and answers. Both versions
+  keep English interview phrasing and show unknown STAR metrics in amber.
 - Eleven supplied practice questions with answer reveal and three self-grades:
   **Lo sabía**, **Dudé**, and **No lo sabía**.
 - Saved attempt counts and the latest grade for each reviewed question.
@@ -55,6 +55,26 @@ The static source status (`learned`, `in-progress`, `pending`) describes existin
 study material. It is separate from saved review grades and is never automatically
 rewritten by an assessment. The STAR page has no grading controls because its seed
 does not supply a drill answer.
+
+## Language selection
+
+Open `/es/` for Spanish or `/en/` for English. The sidebar selector keeps the current
+concept when switching. A manually chosen language is remembered under
+`interview-atlas.locale` in localStorage; storage restrictions do not prevent switching.
+The unlocalized `/` and original `/concepts/<id>/` links use that preference, then
+the first supported browser language (for example `es-PE` or `en-US`), then Spanish.
+They also provide explicit ES/EN links when JavaScript is unavailable.
+
+Direct localized links always select their own language. This uses browser language
+preferences, not physical-country detection. The selector is disabled while any
+review is saving or awaiting confirmation, preserving its retry identity. Existing
+history uses the same concept/question IDs in both languages.
+
+Markdown lives in parallel `content/es/` and `content/en/` trees. Interface messages
+are typed dictionaries, with no added translation library. Build validation rejects
+missing/extra translations, changed question identities, mismatched source status,
+interview phrasing, or removed/altered placeholders. The Spanish STAR page is a
+literal translation of the original English source; metrics remain unfilled.
 
 ## Architecture and failure behavior
 
@@ -96,6 +116,7 @@ Decisions and Diego's still-pending interview defenses:
 - [Static content and Go progress](docs/adr/0009-static-content-and-go-progress.md)
 - [PostgreSQL storage](docs/adr/0010-postgresql-for-study-attempts.md)
 - [Attempt history and idempotency](docs/adr/0011-review-attempt-history.md)
+- [Static bilingual pages](docs/adr/0012-static-bilingual-study-pages.md)
 - [Approved first-slice design](docs/superpowers/specs/2026-10-04-first-study-slice-design.md)
 
 ## Verify
@@ -150,3 +171,5 @@ Markdown becomes static HTML so interview reminders remain available during outa
 Go records immutable review attempts; PostgreSQL makes concurrent retries count once.
 The client confirms saves explicitly and retains the original ID for manual retries.
 This small slice proves the stack while leaving Diego's learning exercises under his ownership.
+Language-specific static URLs make the chosen language shareable without API access.
+Translation identity checks preserve the same review history across Spanish and English.

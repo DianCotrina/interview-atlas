@@ -51,8 +51,10 @@ the choice silently, the project hurts him instead of helping. Therefore:
 - Explanations to Diego in chat: **Spanish by default**; switch to English when he
   writes in English. When an idea is something he'd say in an interview, also give the
   one-sentence English version.
-- Site content: Spanish explanations, with an English "How to say it in the interview"
-  line on each concept page (see `docs/CONTENT_SEED.md`).
+- Site content: Spanish and English variants under `content/es/` and `content/en/`,
+  with the same English "How to say it in the interview" line on each concept page.
+  Keep stable concept/question IDs and exact `[COMPLETAR: ...]` tokens across variants.
+  Translate the source literally; do not use localization to rewrite study claims.
 
 ## Content integrity rules (non-negotiable)
 
