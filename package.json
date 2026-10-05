@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
+    "check:version": "node scripts/check-release-version.mjs",
+    "prebuild": "npm run check:version",
     "build": "next build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

@@ -10,6 +10,7 @@ const english = {
   sidebar: {
     home: "Interview Atlas, home",
     caption: "Your library for thinking and answering clearly.",
+    version: "Version",
     navigation: "Study navigation",
     all: "All concepts",
     note: "Explain the approach first. Then write the code.",
@@ -112,6 +113,7 @@ const spanish: typeof english = {
   sidebar: {
     home: "Interview Atlas, inicio",
     caption: "Tu biblioteca para pensar y responder con claridad.",
+    version: "Versión",
     navigation: "Navegación de estudio",
     all: "Todos los conceptos",
     note: "Primero explica el enfoque. Después escribe el código.",

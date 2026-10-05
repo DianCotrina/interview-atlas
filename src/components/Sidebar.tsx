@@ -6,6 +6,7 @@ import { localeHref, type Locale } from "../lib/locale";
 import { messages } from "../lib/messages";
 import { LanguageSelector } from "./LanguageSelector";
 import { gameCopy } from "../lib/game-copy";
+import { version } from "../../package.json";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
@@ -33,6 +34,7 @@ export function Sidebar({
           Interview
           <br />
           <strong>Atlas</strong>
+          <small className="app-version" aria-label={`${text.sidebar.version} ${version}`}>v{version}</small>
         </span>
       </Link>
       <p className="sidebar-caption">{text.sidebar.caption}</p>

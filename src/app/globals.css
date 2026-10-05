@@ -193,6 +193,14 @@ h3 {
   color: #b7c5d9;
   margin: 25px 10px 32px;
 }
+.app-version {
+  display: block;
+  color: #b7c5d9;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
 .library-link {
   display: flex;
   gap: 10px;
