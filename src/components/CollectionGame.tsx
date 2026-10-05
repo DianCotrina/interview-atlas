@@ -23,12 +23,14 @@ export function CollectionGame({ locale }: { locale: Locale }) {
   const continueButton = useRef<HTMLButtonElement>(null);
   const location = `${state.missionId}/${state.phase}/${state.cursor}`;
   const previousLocation = useRef(location);
+  const previousSolved = useRef(state.solved);
   const hintId = useId();
   useEffect(() => {
     if (previousLocation.current !== location) {
       heading.current?.focus();
       previousLocation.current = location;
-    } else if (state.solved) continueButton.current?.focus();
+    } else if (state.solved && !previousSolved.current) continueButton.current?.focus();
+    previousSolved.current = state.solved;
   }, [location, state.solved]);
 
   const feedback = state.phase === "structure" ? copy.structure

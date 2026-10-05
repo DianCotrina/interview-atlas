@@ -17,6 +17,7 @@ it("wrong answers and premature next cannot advance or award stars", () => {
   expect(state.phase).toBe("structure");
   const correct = solve(state);
   const trace = gameReducer(correct, { type: "next" });
+  expect(trace.feedbackSequence).toBe(0);
   const wrongTrace = gameReducer(trace, { type: "answer", value: "increment" });
   expect(wrongTrace).toMatchObject({ cursor: 0, solved: false });
   expect(wrongTrace.earned["dictionary-counting"]).toBe(1);

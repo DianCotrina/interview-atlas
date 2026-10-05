@@ -7,8 +7,8 @@ type GameCopy = {
   title: string; intro: string; enter: string; campaign: string; map: string; stars: string;
   session: string; phases: Record<Exclude<Phase, "complete">, string>;
   structurePrompt: string; tracePrompt: string; complexityPrompt: string;
-  collection: string; input: string; current: string; empty: string; choose: string; attempt: string; noScript: string;
-  correct: string; wrong: string; wrongTrace: string; wrongStructure: string; wrongComplexity: string;
+  collection: string; input: string; current: string; empty: string; attempt: string; noScript: string;
+  correct: string; wrong: string; wrongStructure: string; wrongComplexity: string;
   next: string; step: string; showHint: string; hideHint: string; read: string; replay: string;
   complete: string; completed: string; rewardNote: string; nextMission: string; allDone: string;
   collectionNames: Record<Collection, string>; complexityNames: Record<Complexity, string>;
@@ -18,14 +18,13 @@ type GameCopy = {
 };
 
 const english: GameCopy = {
-  title: "The collection quest", intro: "Choose your tool. Make each move. Explain why it works.", attempt: "Decision", noScript: "Playing requires JavaScript. The study pages remain readable without it.",
+  title: "The collection quest", intro: "Choose your tool. Make each move. Explain why it works.", attempt: "Attempt", noScript: "Playing requires JavaScript. The study pages remain readable without it.",
   enter: "Start playing", campaign: "Four missions. No clock. Think it through.",
   map: "Choose a mission", stars: "objective stars", session: "Stars and badges last for this session. Reloading or changing language starts a new game; saved study reviews stay in your history.",
   phases: { structure: "Choose your tool", trace: "Make your moves", complexity: "Explain the cost" },
   structurePrompt: "Which collection fits the job with the least unnecessary state?",
   tracePrompt: "What should happen to this item?", complexityPrompt: "For an arbitrary input, what are the time and space costs?",
-  collection: "Your collection", input: "Input", current: "Current item", empty: "Empty collection. Your first move will build it.", choose: "Choose a move", correct: "Good move.", wrong: "Try another approach.",
-  wrongTrace: "Look at the collection before this move. Is the key new, already present, or ready to compare?",
+  collection: "Your collection", input: "Input", current: "Current item", empty: "Empty collection. Your first move will build it.", correct: "Good move.", wrong: "Try another approach.",
   wrongStructure: "Think about what must be remembered: presence, a count, or all items in each group. More state can work, but this mission asks for the smallest suitable tool.",
   wrongComplexity: "Count the passes and what stays in memory. Sequential loops add their costs; storing every item takes more than one number per key.",
   next: "Continue", step: "Move", showHint: "Show a hint", hideHint: "Hide hint", read: "Read the concept", replay: "Replay mission",
@@ -57,14 +56,13 @@ const english: GameCopy = {
 };
 
 const spanish: GameCopy = {
-  title: "La misión de las colecciones", intro: "Elige tu herramienta. Decide cada movimiento. Explica por qué funciona.", attempt: "Decisión", noScript: "Para jugar necesitas JavaScript. Las páginas de estudio se pueden leer sin él.",
+  title: "La misión de las colecciones", intro: "Elige tu herramienta. Decide cada movimiento. Explica por qué funciona.", attempt: "Intento", noScript: "Para jugar necesitas JavaScript. Las páginas de estudio se pueden leer sin él.",
   enter: "Empezar a jugar", campaign: "Cuatro misiones. Sin reloj. Piensa cada decisión.",
   map: "Elige una misión", stars: "estrellas de objetivos", session: "Las estrellas e insignias duran esta partida. Recargar o cambiar de idioma inicia otra; tus autoevaluaciones guardadas siguen en el historial.",
   phases: { structure: "Elige tu herramienta", trace: "Haz tus movimientos", complexity: "Explica el costo" },
   structurePrompt: "¿Qué colección resuelve el trabajo sin guardar información innecesaria?",
   tracePrompt: "¿Qué debe pasar con este elemento?", complexityPrompt: "Para una entrada cualquiera, ¿cuál es el costo en tiempo y espacio?",
-  collection: "Tu colección", input: "Entrada", current: "Elemento actual", empty: "Colección vacía. Tu primer movimiento la construirá.", choose: "Elige un movimiento", correct: "Buen movimiento.", wrong: "Prueba otro enfoque.",
-  wrongTrace: "Mira la colección antes de este movimiento. ¿La clave es nueva, ya existe o toca comparar?",
+  collection: "Tu colección", input: "Entrada", current: "Elemento actual", empty: "Colección vacía. Tu primer movimiento la construirá.", correct: "Buen movimiento.", wrong: "Prueba otro enfoque.",
   wrongStructure: "Piensa qué necesitas recordar: presencia, un conteo o todos los elementos de cada grupo. Guardar más información puede funcionar, pero aquí buscamos la herramienta más simple que cumple el objetivo.",
   wrongComplexity: "Cuenta los recorridos y lo que queda en memoria. Los bucles secuenciales suman sus costos; guardar todos los elementos ocupa más que un número por clave.",
   next: "Continuar", step: "Movimiento", showHint: "Ver una pista", hideHint: "Ocultar pista", read: "Leer el concepto", replay: "Repetir misión",

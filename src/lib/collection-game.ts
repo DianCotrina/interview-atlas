@@ -41,7 +41,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   if (action.type === "hint") return { ...state, hint: !state.hint };
   if (action.type === "next") {
     if (!state.solved || state.phase === "complete") return state;
-    const next = { ...state, solved: false, verdict: null, hint: false };
+    const next = { ...state, solved: false, verdict: null, hint: false, feedbackSequence: 0 };
     if (state.phase === "structure") return { ...next, phase: "trace" };
     if (state.phase === "trace") return state.cursor + 1 < mission.steps.length
       ? { ...next, cursor: state.cursor + 1 }
