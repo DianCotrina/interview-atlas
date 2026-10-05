@@ -1,10 +1,9 @@
 "use client";
 
-import { useId, useReducer, useRef, useState } from "react";
+import { useEffect, useId, useReducer, useRef, useState } from "react";
 import type { DrillQuestion } from "@/lib/content";
 import { assessmentReducer } from "@/lib/assessment-session";
 import {
-  gradeLabels,
   ProgressAPIError,
   recordAttempt,
   type AttemptInput,
@@ -12,22 +11,35 @@ import {
 } from "@/lib/progress-api";
 import { ConceptMarkdown } from "./ConceptMarkdown";
 import { ProgressSummary } from "./ProgressSummary";
+import type { Locale } from "@/lib/locale";
+import { messages } from "@/lib/messages";
+import { useReviewNavigation } from "./ReviewNavigation";
 
 function Question({
   conceptId,
   question,
   index,
   onSaved,
+  locale,
 }: {
   conceptId: string;
   question: DrillQuestion;
   index: number;
   onSaved: () => void;
+  locale: Locale;
 }) {
   const answerId = useId();
   const [revealed, setRevealed] = useState(false);
   const [state, dispatch] = useReducer(assessmentReducer, { status: "idle" });
   const inFlight = useRef(false);
+  const text = messages[locale].practice;
+  const gradeLabels = messages[locale].grades;
+  const { setPending } = useReviewNavigation();
+  const pending = state.status === "saving" || state.status === "failed";
+  useEffect(() => {
+    setPending(answerId, pending);
+    return () => setPending(answerId, false);
+  }, [answerId, pending, setPending]);
 
   async function send(input: AttemptInput) {
     try {
@@ -37,9 +49,7 @@ function Question({
     } catch (error) {
       const conflict =
         error instanceof ProgressAPIError && error.status === 409;
-      const message = conflict
-        ? "Este intento tiene un conflicto. Vuelve a cargar la página y consulta tu historial antes de registrar otro repaso."
-        : "No se pudo confirmar el guardado. Mantén esta página abierta para reintentar el mismo repaso.";
+      const message = conflict ? text.conflict : text.failed;
       dispatch({ type: "fail", message, retryable: !conflict });
     } finally {
       inFlight.current = false;
@@ -81,15 +91,15 @@ function Question({
         aria-controls={answerId}
         onClick={() => setRevealed((value) => !value)}
       >
-        {revealed ? "Ocultar respuesta" : "Revelar respuesta"}{" "}
+        {revealed ? text.hide : text.reveal}{" "}
         <span aria-hidden="true">{revealed ? "−" : "+"}</span>
       </button>
       <div id={answerId} hidden={!revealed} className="question-answer">
-        <ConceptMarkdown body={question.answer} />
+        <ConceptMarkdown body={question.answer} locale={locale} />
       </div>
       {revealed && (
         <div className="assessment-controls">
-          <p>¿Cómo te fue antes de ver la respuesta?</p>
+          <p>{text.assessment}</p>
           <div className="grade-buttons">
             {(Object.keys(gradeLabels) as Grade[]).map((value) => (
               <button
@@ -105,20 +115,20 @@ function Question({
         </div>
       )}
       <div className="save-state" aria-live="polite" aria-atomic="true">
-        {state.status === "saving" && <p>Guardando repaso…</p>}
+        {state.status === "saving" && <p>{text.saving}</p>}
         {state.status === "failed" && (
           <div className="save-error">
             <p>{state.message}</p>
             {state.retryable && (
               <button className="secondary-button" onClick={retry}>
-                Reintentar guardado
+                {text.retry}
               </button>
             )}
           </div>
         )}
         {state.status === "saved" && (
           <p className="save-success">
-            ✓ Guardado: {gradeLabels[state.attempt.grade]}.
+            ✓ {text.saved}: {gradeLabels[state.attempt.grade]}.
           </p>
         )}
       </div>
@@ -130,7 +140,7 @@ function Question({
             setRevealed(false);
           }}
         >
-          Repasar esta pregunta otra vez ↗
+          {text.again} ↗
         </button>
       )}
     </article>
@@ -140,30 +150,33 @@ function Question({
 export function QuestionPractice({
   conceptId,
   questions,
+  locale,
 }: {
   conceptId: string;
   questions: DrillQuestion[];
+  locale: Locale;
 }) {
   const [refreshVersion, setRefreshVersion] = useState(0);
+  const text = messages[locale].practice;
   if (questions.length === 0) return null;
   return (
     <section className="question-practice" aria-labelledby="practice-heading">
       <div className="practice-heading">
         <div>
-          <p className="eyebrow">De recordar a explicar</p>
-          <h2 id="practice-heading">Práctica en voz alta</h2>
+          <p className="eyebrow">{text.eyebrow}</p>
+          <h2 id="practice-heading">{text.heading}</h2>
         </div>
         <span>
-          {questions.length} {questions.length === 1 ? "pregunta" : "preguntas"}
+          {questions.length}{" "}
+          {questions.length === 1 ? text.singular : text.plural}
         </span>
       </div>
-      <p className="practice-intro">
-        Responde primero. Después revela la respuesta y registra cómo te fue.
-      </p>
+      <p className="practice-intro">{text.intro}</p>
       <ProgressSummary
         conceptId={conceptId}
         questions={questions}
         refreshVersion={refreshVersion}
+        locale={locale}
       />
       <div className="question-list">
         {questions.map((question, index) => (
@@ -172,6 +185,7 @@ export function QuestionPractice({
             conceptId={conceptId}
             question={question}
             index={index}
+            locale={locale}
             onSaved={() => setRefreshVersion((value) => value + 1)}
           />
         ))}

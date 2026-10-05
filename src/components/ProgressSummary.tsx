@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { DrillQuestion } from "@/lib/content";
-import {
-  getProgress,
-  gradeLabels,
-  type QuestionProgress,
-} from "@/lib/progress-api";
+import { getProgress, type QuestionProgress } from "@/lib/progress-api";
+import type { Locale } from "@/lib/locale";
+import { messages } from "@/lib/messages";
 
 type HistoryState =
   | { status: "loading" }
@@ -17,11 +15,15 @@ export function ProgressSummary({
   conceptId,
   questions,
   refreshVersion,
+  locale,
 }: {
   conceptId: string;
   questions: DrillQuestion[];
   refreshVersion: number;
+  locale: Locale;
 }) {
+  const text = messages[locale].history;
+  const gradeLabels = messages[locale].grades;
   const [retry, setRetry] = useState(0);
   const [history, setHistory] = useState<HistoryState>({ status: "loading" });
   const version = `${conceptId}/${refreshVersion}/${retry}`;
@@ -51,27 +53,27 @@ export function ProgressSummary({
       : [];
   const attemptCount = rows.reduce((sum, row) => sum + row.attemptCount, 0);
   return (
-    <aside className="progress-summary" aria-label="Historial de repasos">
+    <aside className="progress-summary" aria-label={text.label}>
       <div className="progress-title">
         <span aria-hidden="true">↻</span>
-        <h3>Tu historial de repasos</h3>
+        <h3>{text.heading}</h3>
       </div>
       <div aria-live="polite">
         {refreshing ? (
-          <p>Consultando historial…</p>
+          <p>{text.loading}</p>
         ) : history.status === "unavailable" ? (
-          <p>
-            Historial no disponible. Puedes seguir leyendo y revelar respuestas.
-          </p>
+          <p>{text.unavailable}</p>
         ) : rows.length === 0 ? (
-          <p>Aún no hay repasos guardados para este concepto.</p>
+          <p>{text.empty}</p>
         ) : (
           <>
             <p>
               <strong>
-                {attemptCount} {attemptCount === 1 ? "repaso guardado" : "repasos guardados"}
+                {attemptCount}{" "}
+                {attemptCount === 1 ? text.savedSingular : text.savedPlural}
               </strong>{" "}
-              · {rows.length} de {questions.length} preguntas repasadas
+              · {rows.length} {text.of} {questions.length}{" "}
+              {text.questionsReviewed}
             </p>
             <ul className="history-list">
               {rows.map((row) => (
@@ -82,7 +84,9 @@ export function ProgressSummary({
                   <span>
                     <strong>{gradeLabels[row.latestGrade]}</strong> ·{" "}
                     {row.attemptCount}{" "}
-                    {row.attemptCount === 1 ? "repaso" : "repasos"}
+                    {row.attemptCount === 1
+                      ? text.reviewSingular
+                      : text.reviewPlural}
                   </span>
                 </li>
               ))}
@@ -95,7 +99,7 @@ export function ProgressSummary({
           className="secondary-button"
           onClick={() => setRetry((value) => value + 1)}
         >
-          Volver a consultar
+          {text.retry}
         </button>
       )}
     </aside>

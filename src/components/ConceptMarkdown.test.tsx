@@ -1,6 +1,13 @@
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ConceptMarkdown } from "./ConceptMarkdown";
+it("explains unchanged real-data placeholders in the selected language", () => {
+  const html = renderToStaticMarkup(
+    <ConceptMarkdown locale="en" body="[COMPLETAR: número de jobs migrados]" />,
+  );
+  expect(html).toContain('title="Needs your real information"');
+  expect(html).toContain("[COMPLETAR: número de jobs migrados]");
+});
 it("renders collection comparisons as tables and highlights real-data placeholders", () => {
   const html = renderToStaticMarkup(
     <ConceptMarkdown

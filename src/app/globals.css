@@ -25,12 +25,14 @@ a {
   text-decoration: none;
 }
 button,
-input {
+input,
+select {
   font: inherit;
 }
 button,
 a,
 input,
+select,
 summary {
   -webkit-tap-highlight-color: transparent;
 }
@@ -44,6 +46,7 @@ button:disabled {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 summary:focus-visible {
   outline: 3px solid #7399ff;
   outline-offset: 4px;
@@ -105,6 +108,54 @@ h3 {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+.language-picker {
+  margin: 0 10px 24px;
+}
+.language-picker label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #c2cfe1;
+}
+.language-picker select {
+  width: 100%;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid #b4c4dc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.language-picker select:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+.language-picker p {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #f6d293;
+}
+.locale-entry {
+  max-width: 520px;
+  margin: 15vh auto;
+  padding: 24px;
+}
+.entry-brand {
+  color: var(--blue);
+  font-weight: 650;
+}
+.locale-entry nav {
+  display: flex;
+  gap: 16px;
+  margin-top: 28px;
+}
+.locale-entry nav a {
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--blue);
 }
 .brand {
   display: flex;
@@ -863,6 +914,20 @@ h3 {
   .sidebar {
     min-height: 0;
     padding: 18px 22px;
+  }
+  .language-picker {
+    display: grid;
+    grid-template-columns: auto minmax(0, 160px);
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 0;
+  }
+  .language-picker label {
+    margin: 0;
+  }
+  .language-picker p {
+    grid-column: 1 / -1;
+    margin: 0;
   }
   .brand {
     padding: 0;

@@ -14,12 +14,6 @@ export type QuestionProgress = {
   lastReviewedAt: string;
 };
 
-export const gradeLabels: Record<Grade, string> = {
-  "knew-it": "Lo sabía",
-  hesitated: "Dudé",
-  "did-not-know": "No lo sabía",
-};
-
 export class ProgressAPIError extends Error {
   constructor(
     public readonly status: number,

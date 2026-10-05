@@ -2,24 +2,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { CatalogEntry } from "../lib/content";
-
-export const sectionLabels: Record<string, string> = {
-  Fundamentals: "Fundamentos",
-  Patterns: "Patrones",
-  Behavioral: "Historias STAR",
-  "AI Engineering": "AI code review",
-};
+import { localeHref, type Locale } from "../lib/locale";
+import { messages } from "../lib/messages";
+import { LanguageSelector } from "./LanguageSelector";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
   "Behavioral",
   "AI Engineering",
 ];
-export function Sidebar({ concepts }: { concepts: CatalogEntry[] }) {
+export function Sidebar({
+  concepts,
+  locale,
+}: {
+  concepts: CatalogEntry[];
+  locale: Locale;
+}) {
   const pathname = usePathname();
+  const text = messages[locale];
+  const sectionLabels: Record<string, string> = text.sections;
+  const home = localeHref(locale);
   return (
     <aside className="sidebar">
-      <Link href="/" className="brand" aria-label="Interview Atlas, inicio">
+      <Link href={home} className="brand" aria-label={text.sidebar.home}>
         <span className="brand-mark" aria-hidden="true">
           a
         </span>
@@ -29,17 +34,15 @@ export function Sidebar({ concepts }: { concepts: CatalogEntry[] }) {
           <strong>Atlas</strong>
         </span>
       </Link>
-      <p className="sidebar-caption">
-        Tu biblioteca para pensar
-        <br />y responder con claridad.
-      </p>
-      <nav aria-label="Navegación de estudio">
+      <p className="sidebar-caption">{text.sidebar.caption}</p>
+      <LanguageSelector locale={locale} />
+      <nav aria-label={text.sidebar.navigation}>
         <Link
-          href="/"
-          className={`library-link ${pathname === "/" ? "selected" : ""}`}
-          aria-current={pathname === "/" ? "page" : undefined}
+          href={home}
+          className={`library-link ${pathname === home ? "selected" : ""}`}
+          aria-current={pathname === home ? "page" : undefined}
         >
-          <span aria-hidden="true">▦</span> Todos los conceptos
+          <span aria-hidden="true">▦</span> {text.sidebar.all}
         </Link>
         {sectionOrder
           .filter((section) => concepts.some((c) => c.section === section))
@@ -52,11 +55,12 @@ export function Sidebar({ concepts }: { concepts: CatalogEntry[] }) {
                 .filter((c) => c.section === section)
                 .map((concept) => {
                   const active =
-                    pathname.replace(/\/$/, "") === `/concepts/${concept.id}`;
+                    pathname.replace(/\/$/, "") ===
+                    `/${locale}/concepts/${concept.id}`;
                   return (
                     <Link
                       className={`concept-nav ${active ? "selected" : ""}`}
-                      href={`/concepts/${concept.id}/`}
+                      href={localeHref(locale, `/concepts/${concept.id}/`)}
                       key={concept.id}
                       aria-current={active ? "page" : undefined}
                     >
@@ -73,11 +77,7 @@ export function Sidebar({ concepts }: { concepts: CatalogEntry[] }) {
       </nav>
       <div className="sidebar-note">
         <span aria-hidden="true">↗</span>
-        <p>
-          Primero explica el enfoque.
-          <br />
-          Después escribe el código.
-        </p>
+        <p>{text.sidebar.note}</p>
       </div>
     </aside>
   );

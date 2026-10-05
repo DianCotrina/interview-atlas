@@ -3,20 +3,24 @@ import { useState } from "react";
 import Link from "next/link";
 import type { CatalogEntry } from "../lib/content";
 import { filterConcepts } from "../lib/search";
-import { sectionLabels } from "./Sidebar";
-
-const statusLabels = {
-  learned: "Aprendido",
-  "in-progress": "En práctica",
-  pending: "Por estudiar",
-};
+import { localeHref, type Locale } from "../lib/locale";
+import { messages } from "../lib/messages";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
   "Behavioral",
   "AI Engineering",
 ];
-export function ConceptCatalog({ concepts }: { concepts: CatalogEntry[] }) {
+export function ConceptCatalog({
+  concepts,
+  locale,
+}: {
+  concepts: CatalogEntry[];
+  locale: Locale;
+}) {
+  const text = messages[locale].catalog;
+  const sectionLabels: Record<string, string> = messages[locale].sections;
+  const statusLabels = messages[locale].statuses;
   const [query, setQuery] = useState("");
   const [section, setSection] = useState<string>();
   const sections = sectionOrder.filter((value) =>
@@ -25,30 +29,28 @@ export function ConceptCatalog({ concepts }: { concepts: CatalogEntry[] }) {
   const visible = filterConcepts(concepts, query, section).sort(
     (a, b) =>
       sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section) ||
-      a.title.localeCompare(b.title, "es"),
+      a.title.localeCompare(b.title, locale),
   );
   return (
     <>
       <div className="catalog-tools">
         <label className="search-field">
           <span aria-hidden="true">⌕</span>
-          <span className="sr-only">
-            Buscar conceptos por título o etiqueta
-          </span>
+          <span className="sr-only">{text.searchLabel}</span>
           <input
             type="search"
-            placeholder="Buscar: hashmap, complejidad, AI…"
+            placeholder={text.placeholder}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
-        <div className="section-filters" aria-label="Filtrar por sección">
+        <div className="section-filters" aria-label={text.filter}>
           <button
             className={!section ? "active" : ""}
             aria-pressed={!section}
             onClick={() => setSection(undefined)}
           >
-            Todos
+            {text.all}
           </button>
           {sections.map((value) => (
             <button
@@ -63,16 +65,16 @@ export function ConceptCatalog({ concepts }: { concepts: CatalogEntry[] }) {
         </div>
       </div>
       <div className="list-heading">
-        <h2>Tu material de estudio</h2>
+        <h2>{text.heading}</h2>
         <span aria-live="polite">
-          {visible.length} {visible.length === 1 ? "concepto" : "conceptos"}
+          {visible.length} {visible.length === 1 ? text.singular : text.plural}
         </span>
       </div>
       <ul className="concept-list">
         {visible.map((concept) => (
           <li key={concept.id}>
             <Link
-              href={`/concepts/${concept.id}/`}
+              href={localeHref(locale, `/concepts/${concept.id}/`)}
               className={`concept-row section-${concept.section.toLowerCase().replaceAll(" ", "-")}`}
             >
               <div className="row-content">
@@ -101,8 +103,8 @@ export function ConceptCatalog({ concepts }: { concepts: CatalogEntry[] }) {
       </ul>
       {visible.length === 0 && (
         <div className="empty-search">
-          <h3>No hay conceptos con esa búsqueda.</h3>
-          <p>Prueba otra palabra o cambia la sección.</p>
+          <h3>{text.emptyTitle}</h3>
+          <p>{text.emptyAdvice}</p>
           <button
             className="secondary-button"
             onClick={() => {
@@ -110,7 +112,7 @@ export function ConceptCatalog({ concepts }: { concepts: CatalogEntry[] }) {
               setSection(undefined);
             }}
           >
-            Ver todos los conceptos
+            {text.reset}
           </button>
         </div>
       )}
