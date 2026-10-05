@@ -10,6 +10,8 @@ it.each([
   [["es-PE"], null, "es"],
   [["en-US"], null, "en"],
   [["EN-gb"], null, "en"],
+  [["en-US-u-ca-gregory"], null, "en"],
+  [["es_invalid", "en-US"], null, "en"],
   [["fr-FR", "en-CA", "es"], null, "en"],
   [["de", "es-MX"], null, "es"],
   [["fr-FR"], null, "es"],

@@ -13,9 +13,12 @@ export function resolveLocale(
 ): Locale {
   if (isLocale(saved)) return saved;
   for (const language of languages) {
-    if (!/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i.test(language)) continue;
-    const base = language.toLowerCase().split("-")[0];
-    if (isLocale(base)) return base;
+    try {
+      const base = new Intl.Locale(language).language;
+      if (isLocale(base)) return base;
+    } catch {
+      // Ignore malformed tags without discarding later supported preferences.
+    }
   }
   return defaultLocale;
 }
