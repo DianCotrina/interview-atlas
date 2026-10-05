@@ -5,6 +5,7 @@ import type { CatalogEntry } from "../lib/content";
 import { localeHref, type Locale } from "../lib/locale";
 import { messages } from "../lib/messages";
 import { LanguageSelector } from "./LanguageSelector";
+import { gameCopy } from "../lib/game-copy";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
@@ -43,6 +44,10 @@ export function Sidebar({
           aria-current={pathname === home ? "page" : undefined}
         >
           <span aria-hidden="true">▦</span> {text.sidebar.all}
+        </Link>
+        <Link href={localeHref(locale, "/play/")} className={`library-link ${pathname.replace(/\/$/, "") === `/${locale}/play` ? "selected" : ""}`}
+          aria-current={pathname.replace(/\/$/, "") === `/${locale}/play` ? "page" : undefined}>
+          <span aria-hidden="true">✦</span> {gameCopy[locale].enter}
         </Link>
         {sectionOrder
           .filter((section) => concepts.some((c) => c.section === section))

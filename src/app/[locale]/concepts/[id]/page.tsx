@@ -6,6 +6,8 @@ import { isLocale, localeHref } from "@/lib/locale";
 import { messages } from "@/lib/messages";
 import { ConceptMarkdown } from "@/components/ConceptMarkdown";
 import { QuestionPractice } from "@/components/QuestionPractice";
+import { MissionInvitation } from "@/components/MissionInvitation";
+import { missionIds } from "@/lib/collection-game";
 
 export const dynamicParams = false;
 export function generateStaticParams({
@@ -78,6 +80,7 @@ export default async function ConceptPage({
           <p lang="en">{concept.interviewLine}</p>
         </section>
       </div>
+      {missionIds.some((id) => id === concept.id) && <MissionInvitation locale={locale} compact />}
       <details className="concept-details" open>
         <summary>{text.details}</summary>
         <ConceptMarkdown body={concept.body} locale={locale} />

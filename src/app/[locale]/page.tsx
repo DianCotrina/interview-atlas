@@ -3,6 +3,7 @@ import { loadLocalizedConcepts } from "@/lib/content";
 import { isLocale } from "@/lib/locale";
 import { messages } from "@/lib/messages";
 import { ConceptCatalog } from "@/components/ConceptCatalog";
+import { MissionInvitation } from "@/components/MissionInvitation";
 
 export default async function HomePage({
   params,
@@ -33,6 +34,7 @@ export default async function HomePage({
         <h1>{text.title}</h1>
         <p>{text.intro}</p>
       </header>
+      <MissionInvitation locale={locale} />
       <div className="study-principle">
         <span className="principle-icon" aria-hidden="true">
           ↳
