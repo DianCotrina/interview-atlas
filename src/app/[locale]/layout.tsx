@@ -7,6 +7,7 @@ import { messages } from "@/lib/messages";
 import { Sidebar } from "@/components/Sidebar";
 import { ReviewNavigationProvider } from "@/components/ReviewNavigation";
 import { CollectionGameProvider } from "@/components/CollectionGameSession";
+import { version } from "../../../package.json";
 import "../globals.css";
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -57,7 +58,7 @@ export default async function StudyLayout({
         <ReviewNavigationProvider>
           <CollectionGameProvider>
           <div className="app-shell">
-            <Sidebar concepts={entries} locale={locale} />
+            <Sidebar concepts={entries} locale={locale} appVersion={version} />
             <main id="main" className="main-content">
               {children}
             </main>

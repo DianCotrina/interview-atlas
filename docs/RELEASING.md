@@ -2,7 +2,7 @@
 
 Diego selected automatic versioning from Conventional Commits for the first
 Vercel deployment. Release Please prepares a release pull request; merging that
-PR creates the GitHub release and immutable `vX.Y.Z` tag. No npm package is published.
+PR creates the GitHub release and `vX.Y.Z` tag. No npm package is published.
 
 ## Version source and compatibility
 
@@ -49,7 +49,8 @@ Ordinary CI keeps read-only repository access. Repository Settings > Actions >
 General must allow GitHub Actions to create pull requests. That setting also
 permits approval, but this workflow neither approves nor merges PRs.
 
-The first release starts at `0.1.0`. The initially empty manifest is the documented
+The first release is explicitly configured with `initial-version: "0.1.0"`.
+The initially empty manifest is the documented
 Release Please bootstrap state; the first merged release PR populates it.
 `bootstrap-sha` excludes already completed development history from automatic
 release notes. It is ignored after the first release. Do not edit published tags,

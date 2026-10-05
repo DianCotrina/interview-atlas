@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 // Official SemVer 2.0.0 expression: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
@@ -20,7 +20,7 @@ export function validateReleaseVersions(packageJson, packageLock, manifest) {
   return version;
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const readJson = (name) => JSON.parse(readFileSync(new URL(`../${name}`, import.meta.url), "utf8"));
   const version = validateReleaseVersions(
     readJson("package.json"), readJson("package-lock.json"), readJson(".release-please-manifest.json"),

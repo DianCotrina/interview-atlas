@@ -6,7 +6,6 @@ import { localeHref, type Locale } from "../lib/locale";
 import { messages } from "../lib/messages";
 import { LanguageSelector } from "./LanguageSelector";
 import { gameCopy } from "../lib/game-copy";
-import { version } from "../../package.json";
 const sectionOrder = [
   "Fundamentals",
   "Patterns",
@@ -16,9 +15,11 @@ const sectionOrder = [
 export function Sidebar({
   concepts,
   locale,
+  appVersion,
 }: {
   concepts: CatalogEntry[];
   locale: Locale;
+  appVersion: string;
 }) {
   const pathname = usePathname();
   const text = messages[locale];
@@ -34,9 +35,9 @@ export function Sidebar({
           Interview
           <br />
           <strong>Atlas</strong>
-          <small className="app-version" aria-label={`${text.sidebar.version} ${version}`}>v{version}</small>
         </span>
       </Link>
+      <p className="app-version"><span className="sr-only">{text.sidebar.version} </span>v{appVersion}</p>
       <p className="sidebar-caption">{text.sidebar.caption}</p>
       <LanguageSelector locale={locale} />
       <nav aria-label={text.sidebar.navigation}>
